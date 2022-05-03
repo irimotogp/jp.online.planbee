@@ -1,0 +1,225 @@
+@import 'variables';
+
+@import 'node_modules/bootstrap/scss/bootstrap';
+@import 'node_modules/bootstrap-vue/src/index.scss';
+@import '~sweetalert2/dist/sweetalert2';
+@import '~@fortawesome/fontawesome-svg-core/styles';
+
+@import 'elements/card';
+@import 'elements/navbar';
+@import 'elements/buttons';
+@import 'elements/transitions';
+
+@import 'components/server-error';
+
+// @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 400;
+}
+.card_list {
+  cursor: pointer;
+}
+.card_image {
+  width: 160px;
+  height: 160px;
+  max-width: 30%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+.card_text_detail {
+  font-size: 0.8rem;
+}
+.card_total {
+  .rating_avg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: $theme_color;
+    
+    p {
+      color: white;
+      margin: 0;
+      span {
+        font-size: 2rem;
+      }
+    }
+    @include media-breakpoint-down(sm)  {
+      min-height: 10rem;
+    }
+  }
+}
+.review_tl {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  .total {
+    span {
+      font-size: 2em;
+    }
+  }
+  .likes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    li {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      a {
+        cursor: pointer;
+        width: 20px;
+        display: block;
+        margin: 0 5px;
+        img {
+          display: block;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+.ratings {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  list-style: none;
+}
+.rating_name {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+.review_answers {
+  list-style: none;
+}
+.review_meta {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  .meta_image {
+    width: 80px;
+    height: 80px;
+    border-radius: 9999px;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  } 
+  .meta_info {
+    width: calc(100% - 80px);
+    padding-left: 0.8rem;
+    padding-top: 0.8rem;
+  }
+}
+
+.reply_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  background: $bg_light_grey2;
+  padding: 1rem;
+  .reply_content {
+    width: 100%;
+  }
+  .reply_name {
+    width: calc(100% - 35px);
+    margin-left: auto;
+    padding-top: 0.3rem;
+    p {
+      font-size: 14px;
+    }
+  }
+  .reply_image {
+    img {
+      height: 25px;
+      border-radius: 9999px;
+      overflow: hidden;
+      width: 25px;
+    }
+  }
+}
+
+.main_layout {
+  min-height: 80vh;
+}
+
+.main_tab {
+  .nav-item {
+    width: auto;
+    @include media-breakpoint-down(sm)  {
+      width: auto;
+    }
+    .nav-link {
+      background: $bg_light_grey;
+      color: black;
+      border: 1px solid white;
+      &.active {
+        background: $theme_color; 
+        color: white;
+        border: 1px solid white;
+      }
+    }
+  }
+}
+
+.sub_content {
+  @include media-breakpoint-down(sm)  {
+    margin-bottom: 2rem;
+  }
+}
+
+.main_sidebar {
+  .main_tab {
+    .nav-item {
+      width: 100%;
+    }
+  }
+}
+
+.filter_block {
+  display: block;
+  position: relative;
+  border: 1px solid lightgrey;
+  padding: 1.5rem 1rem 1rem;
+  .filter_label {
+    position: absolute;
+    left: 1rem;
+    top: -1rem;
+    display: inline-block;
+    padding: 0 0.5rem;
+    background: white;
+  }
+}
+
+.main_footer {
+  background: $bg_light_grey;
+}
+
+@media only screen and (max-width: 539px) {
+  .card_image {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    img {
+      object-fit: contain;
+    }
+  }
+  .card_info {
+    width: 100%;
+  }
+  .rating_field_avg {
+    p {
+      font-size: 0.9rem;
+    }
+  }
+}
