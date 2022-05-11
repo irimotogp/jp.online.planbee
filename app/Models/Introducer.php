@@ -32,6 +32,14 @@ class Introducer extends Model
         'created_at'
     ];
 
+    public function agency() {
+        return $this->hasMany(Agency::class);
+    }
+
+    public function customer() {
+        return $this->hasMany(Customer::class);
+    }
+
     public function getAccessUrl() {
         if($this->introducer_type == IntroducerType::AGENCY) {
             return config('app.url') . '/agency/' . $this->uuid;

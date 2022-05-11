@@ -16,7 +16,7 @@
           <div class="list">
             <div v-for="(item, index) in privacy" :key="index" class="mb-2 item">
               <b-form-checkbox
-                id="`privacy_${index}`"
+                :id="`privacy_${index}`"
                 v-model="item.value"
                 value="1"
                 unchecked-value="0"
@@ -78,7 +78,7 @@
           <div class="mb-3 row">
             <label class="col-md-4 col-form-label text-md-right">生年月日</label>
             <div class="col-md-6">
-              <input v-model="form.birthday" :class="{ 'is-invalid': form.errors.has('birthday') }" class="form-control" type="date" name="birthday" id="birthday" placeholder="0123456789">
+              <input v-model="form.birthday" :class="{ 'is-invalid': form.errors.has('birthday') }" class="form-control" type="date" name="birthday" id="birthday" placeholder="012-3456-7890">
               <has-error :form="form" field="birthday" />
             </div>
           </div>
@@ -94,7 +94,7 @@
           <div class="mb-3 row">
             <label class="col-md-4 col-form-label text-md-right">自宅電話番号</label>
             <div class="col-md-6">
-              <input v-model="form.home_phone" :class="{ 'is-invalid': form.errors.has('home_phone') }" class="form-control" type="text" name="home_phone" id="home_phone" placeholder="0123456789">
+              <input v-model="form.home_phone" :class="{ 'is-invalid': form.errors.has('home_phone') }" class="form-control" type="text" name="home_phone" id="home_phone" placeholder="012-3456-7890">
               <has-error :form="form" field="home_phone" />
             </div>
           </div>
@@ -102,7 +102,7 @@
           <div class="mb-3 row">
             <label class="col-md-4 col-form-label text-md-right">FAX番号</label>
             <div class="col-md-6">
-              <input v-model="form.fax" :class="{ 'is-invalid': form.errors.has('fax') }" class="form-control" type="text" name="fax" id="fax" placeholder="0123456789">
+              <input v-model="form.fax" :class="{ 'is-invalid': form.errors.has('fax') }" class="form-control" type="text" name="fax" id="fax" placeholder="012-3456-7890">
               <has-error :form="form" field="fax" />
             </div>
           </div>
@@ -110,7 +110,7 @@
           <div class="mb-3 row">
             <label class="col-md-4 col-form-label text-md-right">携帯電話</label>
             <div class="col-md-6">
-              <input v-model="form.mobile_phone" :class="{ 'is-invalid': form.errors.has('mobile_phone') }" class="form-control" type="text" name="mobile_phone" id="mobile_phone" placeholder="0123456789">
+              <input v-model="form.mobile_phone" :class="{ 'is-invalid': form.errors.has('mobile_phone') }" class="form-control" type="text" name="mobile_phone" id="mobile_phone" placeholder="012-3456-7890">
               <has-error :form="form" field="mobile_phone" />
             </div>
           </div>
@@ -118,7 +118,7 @@
           <div class="mb-3 row">
             <label class="col-md-4 col-form-label text-md-right">携帯電話（予備）</label>
             <div class="col-md-6">
-              <input v-model="form.mobile_phone2" :class="{ 'is-invalid': form.errors.has('mobile_phone2') }" class="form-control" type="text" name="mobile_phone2" id="mobile_phone2" placeholder="0123456789">
+              <input v-model="form.mobile_phone2" :class="{ 'is-invalid': form.errors.has('mobile_phone2') }" class="form-control" type="text" name="mobile_phone2" id="mobile_phone2" placeholder="012-3456-7890">
               <has-error :form="form" field="mobile_phone2" />
             </div>
           </div>
@@ -178,7 +178,7 @@
           <div class="mb-3 row">
             <label class="col-md-4 col-form-label text-md-right">宛先電話番号</label>
             <div class="col-md-6">
-              <input v-model="form.receiver_phone" :class="{ 'is-invalid': form.errors.has('receiver_phone') }" class="form-control" type="text" name="receiver_phone" id="receiver_phone" placeholder="0123456789">
+              <input v-model="form.receiver_phone" :class="{ 'is-invalid': form.errors.has('receiver_phone') }" class="form-control" type="text" name="receiver_phone" id="receiver_phone" placeholder="012-3456-7890">
               <has-error :form="form" field="receiver_phone" />
             </div>
           </div>
@@ -252,7 +252,7 @@
             />
 
           <div class="mt-5 row">
-            <div class="col-md-8 offset-md-4 d-flex">
+            <div class="col-md-8 offset-md-4 text-center text-md-left">
               <!-- Submit Button -->
               <v-button :loading="form.busy">
                 {{ $t('register') }}
@@ -299,7 +299,7 @@ export default {
     title: "オンラインレンタル申し込み",
     loading: true,
     uuid: null,
-    step: 2,
+    step: 1,
     show_errors: false,
     form: new Form({
     }),

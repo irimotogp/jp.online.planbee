@@ -15,7 +15,7 @@ class CreateShippingAddressesTable extends Migration
     {
         Schema::create('shipping_addresses', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable()->comment('発送先指定名');
+            $table->string('name')->nullable()->comment('発送先名');
             $table->timestamps();
         });
     }

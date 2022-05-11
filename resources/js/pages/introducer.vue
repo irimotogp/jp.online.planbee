@@ -125,7 +125,7 @@
           </div>
 
           <div class="mt-5 row">
-            <div class="col-md-8 offset-md-4 d-flex">
+            <div class="col-md-8 offset-md-4 text-center text-md-left">
               <!-- Submit Button -->
               <v-button :loading="form.busy">
                 {{ $t('register') }}

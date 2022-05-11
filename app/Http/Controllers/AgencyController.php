@@ -25,7 +25,6 @@ class AgencyController extends Controller
         if($introducer) {
             $now = Carbon::now();
             $diffHours = $introducer->created_at->diffInHours($now);
-            dd($diffHours);
             if($diffHours >= 24) {
                 return [
                     'status' => 'error',

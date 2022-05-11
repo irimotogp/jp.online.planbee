@@ -60,6 +60,10 @@ class Customer extends Model
         'introducer_type'
     ];
     
+    public function introducer() {
+        return $this->belongsTo(Introducer::class);
+    }
+    
     public function deposit() {
         return $this->belongsTo(Deposit::class);
     }
