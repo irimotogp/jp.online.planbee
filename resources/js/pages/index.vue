@@ -7,9 +7,6 @@
         </router-link>
       </template>
       <template v-else>
-        <router-link :to="{ name: 'login' }">
-          {{ $t('login') }}
-        </router-link>
         <router-link :to="{ name: 'register' }">
           {{ $t('register') }}
         </router-link>
@@ -19,10 +16,6 @@
     <div class="text-center">
       <div class="title mb-4">
         {{ title }}
-      </div>
-
-      <div class="links">
-        <a href="https://github.com/cretueusebiu/laravel-vue-spa">github.com/cretueusebiu/laravel-vue-spa</a>
       </div>
     </div>
   </div>

@@ -3,6 +3,10 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\UserType;
+use App\Enums\NthType;
+use App\Enums\ISDType;
+
 
 class CreateUsersTable extends Migration
 {
@@ -19,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
-            $table->text('image')->nullable()->comment('プロフィール画像');
             $table->rememberToken();
             $table->timestamps();
         });

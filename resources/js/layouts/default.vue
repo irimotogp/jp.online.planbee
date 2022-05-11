@@ -1,5 +1,6 @@
 <template>
   <div class="main_layout">
+    <navbar />
 
     <div class="container-lg py-5">
       <div class="main_content">
@@ -11,11 +12,14 @@
 </template>
 
 <script>
-
+import Navbar from '~/components/Navbar'
 export default {
+  watch: {
+  },
   name: 'MainLayout',
 
   components: {
+    Navbar
   }
 }
 </script>

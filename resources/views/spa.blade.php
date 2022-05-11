@@ -4,6 +4,11 @@ $config = [
     'locale' => $locale = app()->getLocale(),
     'locales' => config('app.locales'),
     'githubAuth' => config('services.github.client_id'),
+    'ContractType' => App\Enums\ContractType::getAllValues(),
+    'IntroducerType' => App\Enums\IntroducerType::getAllValues(),
+    'ISDType' => App\Enums\ISDType::getAllValues(),
+    'NthType' => App\Enums\NthType::getAllValues(),
+    'SexType' => App\Enums\SexType::getAllValues(),
 ];
 $appJs = mix('dist/js/app.js');
 $appCss = mix('dist/css/app.css');
