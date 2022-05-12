@@ -1,62 +1,82 @@
 <template>
   <div>
     <div class="mb-3 row">
-      <label class="col-md-4 col-form-label text-md-right">銀行コード</label>
-      <div class="col-md-5">
-        <input @change="change" v-model="data.bank_code" :class="{ 'is-invalid': form.errors.has('bank_code') }" class="form-control" type="text" name="bank_code" id="bank_code">
+      <label class="col-md-4 col-form-label text-md-right">銀行</label>
+      <div class="col-md-8">
+        <v-select
+          name="bank"
+          v-model="bank"
+          :options="bank_options"
+          :class="{ 'is-invalid': form.errors.has('bank_code') || form.errors.has('bank_name') }"
+        ></v-select>
         <has-error :form="form" field="bank_code" />
-      </div>
-    </div>
-    <div class="mb-3 row">
-      <label class="col-md-4 col-form-label text-md-right">銀行名</label>
-      <div class="col-md-5">
-        <input @change="change" v-model="data.bank_name" :class="{ 'is-invalid': form.errors.has('bank_name') }" class="form-control" type="text" name="bank_name" id="bank_name">
         <has-error :form="form" field="bank_name" />
+        <p v-if="bank" class="mb-0 mt-2">銀行コード: {{ bank.code}}　　銀行名: {{ bank.name}} </p>
       </div>
     </div>
     
     <div class="mb-3 row">
-      <label class="col-md-4 col-form-label text-md-right">支店コード</label>
-      <div class="col-md-5">
-        <input @change="change" v-model="data.branch_code" :class="{ 'is-invalid': form.errors.has('branch_code') }" class="form-control" type="text" name="branch_code" id="branch_code">
+      <label class="col-md-4 col-form-label text-md-right">支店</label>
+      <div class="col-md-8">
+        <v-select
+          name="branch"
+          v-model="branch"
+          @input="changeBranch"
+          :options="branch_options"
+          :class="{ 'is-invalid': form.errors.has('branch_code') || form.errors.has('branch_name') }"/>
         <has-error :form="form" field="branch_code" />
-      </div>
-    </div>
-    <div class="mb-3 row">
-      <label class="col-md-4 col-form-label text-md-right">支店名</label>
-      <div class="col-md-5">
-        <input @change="change" v-model="data.branch_name" :class="{ 'is-invalid': form.errors.has('branch_name') }" class="form-control" type="text" name="branch_name" id="branch_name">
         <has-error :form="form" field="branch_name" />
+        <p v-if="branch" class="mb-0 mt-2">支店コード: {{ branch.code}}　　支店名: {{ branch.name}} </p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css';
 export default {
+  components: {
+     vSelect
+  },
   watch: {
+    bank(value) {
+      this.branch = null
+      this.branch_options = []
+      var obj = this
+      if(value) {
+        fetch(`https://zengin-code.github.io/api/branches/${value.code}.json`)
+        .then(response => response.json())
+        .then(data => {
+          obj.branch_options = Object.values(data).map((x) => { x.label = x.code + "　" + x.name; return x; })
+        });
+      } else {
+        obj.branch_options = []
+      }
+      this.$emit("updateBank", value)
+    },
+
   },
   created () {
-    this.data.bank_name = this.form.bank_name
-    this.data.bank_code = this.form.bank_code
-    this.data.branch_name = this.form.branch_name
-    this.data.branch_code = this.form.branch_code
+    var obj = this
+    fetch("https://zengin-code.github.io/api/banks.json")
+    .then(response => response.json())
+    .then(data => {
+      obj.bank_options = Object.values(data).map((x) => { x.label = x.code + "　" + x.name; return x; })
+    });
   },
   props: [ 'form', 'update' ],
   data () {
     return {
-      data: {
-        bank_name: null,
-        bank_code: null,
-        branch_name: null,
-        branch_code: null,
-      },
+      bank_options: [],
+      branch_options: [],
+      bank: null,
+      branch: null
     }
   },
   methods: {
-    change() {
-      this.$emit("update", this.data)
+    changeBranch() {
+      this.$emit("updateBranch", this.branch)
     }
   }
 }

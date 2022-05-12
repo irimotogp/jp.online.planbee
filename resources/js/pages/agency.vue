@@ -246,7 +246,8 @@
           </div>
 
           <bank-code 
-            @update="updateBank"
+            @updateBank="updateBank"
+            @updateBranch="updateBranch"
             :form="form"/>
           
           <div class="mb-3 row">
@@ -439,11 +440,15 @@ export default {
       this.form.city2 = data.city
       this.form.addr2 = data.addr
     },
-    updateBank(data) {
-      this.form.bank_name = data.bank_name
-      this.form.bank_code = data.bank_code
-      this.form.branch_name = data.branch_name
-      this.form.branch_code = data.branch_code
+    updateBank(bank) {
+      this.form.bank_name = bank ? bank.name : null
+      this.form.bank_code = bank ? bank.code : null
+      this.form.branch_name = null
+      this.form.branch_code = null
+    },
+    updateBranch(branch) {
+      this.form.branch_name = branch ? branch.name : null
+      this.form.branch_code = branch ? branch.code : null
     },
     updateImage(name, image) {
       this.form[name] = image

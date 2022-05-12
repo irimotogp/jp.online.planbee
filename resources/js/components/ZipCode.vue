@@ -133,7 +133,6 @@ export default {
             obj.data.addr = area
           }	
           obj.change()
-          console.log('-------obj----------', obj)
         }
       }
       const scriptPromise = new Promise((resolve, reject) => {
@@ -149,7 +148,6 @@ export default {
     },
     change() {
       this.$emit("update", this.data)
-      console.log('-------this.change----------', this.data)
     }
   }
 }

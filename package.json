@@ -28,9 +28,11 @@
     "vue-meta": "^2.4.0",
     "vue-radar": "^0.1.5",
     "vue-router": "^3.5.2",
+    "vue-select": "^3.18.3",
     "vue-star-rating": "^1.7.0",
     "vuex": "^3.6.2",
-    "vuex-router-sync": "^5.0.0"
+    "vuex-router-sync": "^5.0.0",
+    "zengin-code": "^1.0.0-p20220425"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
