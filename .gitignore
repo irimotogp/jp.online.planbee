@@ -3,6 +3,8 @@
 /vendor
 /public/uploads
 /public/packages
+/public/storage
+.htaccess
 .env
 .env.backup
 .env.dusk.local
