@@ -19,13 +19,6 @@ class AppServiceProvider extends ServiceProvider
         // if ($this->app->runningUnitTests()) {
             Schema::defaultStringLength(191);
         // }
-        Validator::extend('decimal', function ($attribute, $value, $parameters, $validator) {
-            $decimalLength = strlen(strrchr(strval($value), '.')) - 1;
-            if($decimalLength > intval($parameters[0])) 
-                return false;
-            else 
-                return true;
-        });
     }
 
     /**

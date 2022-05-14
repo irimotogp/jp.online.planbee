@@ -43,15 +43,11 @@ export default {
     bank(value) {
       this.branch = null
       this.branch_options = []
-      var obj = this
       if(value) {
-        fetch(`https://zengin-code.github.io/api/branches/${value.code}.json`)
-        .then(response => response.json())
-        .then(data => {
-          obj.branch_options = Object.values(data).map((x) => { x.label = x.code + "　" + x.name; return x; })
-        });
+        this.fetchBranch(value)
       } else {
-        obj.branch_options = []
+        this.branch_options = []
+        this.$emit("updateBranch", null)
       }
       this.$emit("updateBank", value)
     },
@@ -63,6 +59,10 @@ export default {
     .then(response => response.json())
     .then(data => {
       obj.bank_options = Object.values(data).map((x) => { x.label = x.code + "　" + x.name; return x; })
+      if(obj.form.bank) {
+        obj.bank = obj.form.bank
+        this.fetchBranch(obj.bank)
+      }
     });
   },
   props: [ 'form', 'update' ],
@@ -77,6 +77,21 @@ export default {
   methods: {
     changeBranch() {
       this.$emit("updateBranch", this.branch)
+    },
+    fetchBranch(value) {
+      var obj = this
+      fetch(`https://zengin-code.github.io/api/branches/${value.code}.json`)
+      .then(response => response.json())
+      .then(data => {
+        obj.branch_options = Object.values(data).map((x) => { x.label = x.code + "　" + x.name; return x; })
+        const option = obj.form.branch ? obj.branch_options.find(x => x.code == obj.form.branch.code) : null
+        if(option) {
+          obj.branch = obj.form.branch
+          this.$emit("updateBranch", obj.branch)
+        } else {
+          this.$emit("updateBranch", null)
+        }
+      });
     }
   }
 }

@@ -26,3 +26,37 @@ body {
     }
   }
 }
+.confirm {
+  table {
+    @media (max-width: 767px) {
+      display: block;
+    }
+    tr {
+      @media (max-width: 767px) {
+        display: block;
+      }
+      th {
+        width: 40%;
+        @media (max-width: 767px) {
+          display: block;
+          width: 100%;
+          background: $blue_light;
+        }
+      }
+      td {
+        @media (max-width: 767px) {
+          width: 100%;
+          display: block;
+        }
+        img {
+          max-width: 300px;
+          width: 100%;
+          @media (max-width: 767px) {
+            max-width: 100%;
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}

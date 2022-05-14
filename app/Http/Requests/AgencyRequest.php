@@ -38,10 +38,10 @@ class AgencyRequest extends FormRequest
             'pref1' => 'required',
             'city1' => '',
             'addr1' => '',
-            'home_phone' => 'required|regex:/^\d{3}-\d{4}-\d{4}$/',
-            'fax' => 'required|regex:/^\d{3}-\d{4}-\d{4}$/',
-            'mobile_phone' => 'required|regex:/^\d{3}-\d{4}-\d{4}$/',
-            'mobile_phone2' => 'required|regex:/^\d{3}-\d{4}-\d{4}$/',
+            'home_phone' => 'nullable|numeric|digits:11',
+            'fax' => 'required|numeric|digits:11',
+            'mobile_phone' => 'nullable|numeric|digits:11',
+            'mobile_phone2' => 'required|numeric|digits:11',
             'pc_email' => 'required|email:filter|max:255',
             'phone_email' => 'required|email:filter|max:255',
             'work_place_name' => 'required',
@@ -51,7 +51,7 @@ class AgencyRequest extends FormRequest
             'city2' => '',
             'addr2' => '',
             'receiver_name' => 'required',
-            'receiver_phone' => 'required|regex:/^\d{3}-\d{4}-\d{4}$/',
+            'receiver_phone' => 'required|numeric|digits:11',
             'syoukai_id' => 'required',
             'syoukai_name' => 'required',
             'eva_id' => 'required',
@@ -125,5 +125,13 @@ class AgencyRequest extends FormRequest
     {
         return [
         ];
+    }
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if(empty($this->input('home_phone')) && empty($this->input('mobile_phone'))) {
+                $validator->errors()->add('phone_any', '自宅番号もしくは携帯番号を入力してください。');
+            }
+        });
     }
 }
