@@ -588,6 +588,7 @@ export default {
           console.log(e);
         }
       } catch(e) {
+        this.back_step()
         console.log(e);
       }
     },
