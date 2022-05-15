@@ -1,12 +1,7 @@
 <template>
   <div class="row">
     <div class="col-lg-10 m-auto">
-      <card v-if="mustVerifyEmail" :title="$t('register')">
-        <div class="alert alert-success" role="alert">
-          {{ $t('verify_email_address') }}
-        </div>
-      </card>
-      <card v-else :title="title">
+      <card :title="title">
         <form @submit.prevent="register" @keydown="form.onKeydown($event)" class="py-3">
           <!-- sinsei_name -->
           <div class="mb-3 row">
@@ -33,7 +28,7 @@
               <b-form-radio-group
                 id="radiobox-group-introducer_type"
                 v-model="form.introducer_type"
-                :options="introducer_options"
+                :options="introducer_type_options"
                 :class="{ 'is-invalid': form.errors.has('introducer_type') }"
               ></b-form-radio-group>
               <has-error :form="form" field="introducer_type" />
@@ -44,7 +39,7 @@
           <div class="mb-3 row">
             <label class="col-md-4 col-form-label text-md-end">紹介取次店ID</label>
             <div class="col-md-8">
-              <input v-model="form.syoukai_id" :class="{ 'is-invalid': form.errors.has('syoukai_id') }" class="form-control" type="text" name="name">
+              <input v-model="form.syoukai_id" :class="{ 'is-invalid': form.errors.has('syoukai_id') }" class="form-control" type="text" name="syoukai_id">
               <has-error :form="form" field="syoukai_id" />
             </div>
           </div>
@@ -53,28 +48,30 @@
           <div class="mb-3 row">
             <label class="col-md-4 col-form-label text-md-end">紹介取次店名</label>
             <div class="col-md-8">
-              <input v-model="form.syoukai_name" :class="{ 'is-invalid': form.errors.has('syoukai_name') }" class="form-control" type="text" name="name">
+              <input v-model="form.syoukai_name" :class="{ 'is-invalid': form.errors.has('syoukai_name') }" class="form-control" type="text" name="syoukai_name">
               <has-error :form="form" field="syoukai_name" />
             </div>
           </div>
 
-          <!-- eva_id -->
-          <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-end">エバンジェリストID</label>
-            <div class="col-md-8">
-              <input v-model="form.eva_id" :class="{ 'is-invalid': form.errors.has('eva_id') }" class="form-control" type="text" name="name">
-              <has-error :form="form" field="eva_id" />
+          <template v-if="form.introducer_type == 'AGENCY'">
+            <!-- eva_id -->
+            <div class="mb-3 row">
+              <label class="col-md-4 col-form-label text-md-end">エバンジェリストID</label>
+              <div class="col-md-8">
+                <input v-model="form.eva_id" :class="{ 'is-invalid': form.errors.has('eva_id') }" class="form-control" type="text" name="eva_id">
+                <has-error :form="form" field="eva_id" />
+              </div>
             </div>
-          </div>
 
-          <!-- eva_name -->
-          <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-end">エバンジェリスト名</label>
-            <div class="col-md-8">
-              <input v-model="form.eva_name" :class="{ 'is-invalid': form.errors.has('eva_name') }" class="form-control" type="text" name="name">
-              <has-error :form="form" field="eva_name" />
+            <!-- eva_name -->
+            <div class="mb-3 row">
+              <label class="col-md-4 col-form-label text-md-end">エバンジェリスト名</label>
+              <div class="col-md-8">
+                <input v-model="form.eva_name" :class="{ 'is-invalid': form.errors.has('eva_name') }" class="form-control" type="text" name="eva_name">
+                <has-error :form="form" field="eva_name" />
+              </div>
             </div>
-          </div>
+          </template>
 
           <!-- nth_type -->
           <div class="mb-3 row">
@@ -96,6 +93,7 @@
             <label class="col-md-4 col-form-label text-md-end">直上者指定</label>
             <div class="col-md-8">
               <b-form-radio-group
+                @change="changeIdsType"
                 id="radiobox-group-isd_type"
                 v-model="form.isd_type"
                 class="mt-2"
@@ -106,30 +104,30 @@
             </div>
           </div>
 
-          <!-- isd_id -->
-          <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-end">直上者ID</label>
-            <div class="col-md-8">
-              <input v-model="form.isd_id" :class="{ 'is-invalid': form.errors.has('isd_id') }" class="form-control" type="text" name="name">
-              <has-error :form="form" field="isd_id" />
+          <template v-if="form.isd_type == 'DESIGNATE'">
+            <!-- isd_id -->
+            <div class="mb-3 row">
+              <label class="col-md-4 col-form-label text-md-end">直上者ID</label>
+              <div class="col-md-8">
+                <input v-model="form.isd_id" :class="{ 'is-invalid': form.errors.has('isd_id') }" class="form-control" type="text" name="name">
+                <has-error :form="form" field="isd_id" />
+              </div>
             </div>
-          </div>
 
-          <!-- isd_name -->
-          <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-end">直上者名</label>
-            <div class="col-md-8">
-              <input v-model="form.isd_name" :class="{ 'is-invalid': form.errors.has('isd_name') }" class="form-control" type="text" name="name">
-              <has-error :form="form" field="isd_name" />
+            <!-- isd_name -->
+            <div class="mb-3 row">
+              <label class="col-md-4 col-form-label text-md-end">直上者名</label>
+              <div class="col-md-8">
+                <input v-model="form.isd_name" :class="{ 'is-invalid': form.errors.has('isd_name') }" class="form-control" type="text" name="name">
+                <has-error :form="form" field="isd_name" />
+              </div>
             </div>
-          </div>
+          </template>
 
           <div class="mt-5 row">
             <div class="col-md-8 offset-md-4 text-center text-md-left">
               <!-- Submit Button -->
-              <v-button :loading="form.busy">
-                {{ $t('register') }}
-              </v-button>
+              <v-button :loading="form.busy">送信</v-button>
             </div>
           </div>
         </form>
@@ -152,32 +150,32 @@ export default {
   },
   
   created () {
-    this.introducer_options = window.config.IntroducerType
+    this.introducer_type_options = window.config.IntroducerType
     this.nth_type_options = window.config.NthType
     this.isd_type_options = window.config.ISDType
+    this.form.introducer_type = 'AGENCY'
+    this.form.nth_type = 'FIRST'
+    this.form.isd_type = 'AUTOMATIC'
   },
 
   data: () => ({
     title: "取次店の画面",
     form: new Form({
-      name: null,
-      email: null,
-      password: null,
-      password_confirmation: null,
-      user_type: null,
+      sinsei_name: null,
+      sinsei_email: null,
+      introducer_type: null,
       syoukai_id: null,
       syoukai_name: null,
       eva_id: null,
       eva_name: null,
-      nth: null,
-      isd: null,
+      nth_type: null,
+      isd_type: null,
       isd_id: null,
       isd_name: null,
     }),
     isd_type_options: [],
     nth_type_options: [],
     user_type_options: [],
-    mustVerifyEmail: false
   }),
 
   methods: {
@@ -187,7 +185,7 @@ export default {
         Swal.fire({
           type: 'success',
           title: "",
-          text: "申請されました。",
+          text: `${this.form.sinsei_name}様にオンライン登録のURLをメールで送信しました`,
           reverseButtons: true,
           confirmButtonText: i18n.t('閉じる'),
           cancelButtonText: i18n.t('cancel')
@@ -196,6 +194,12 @@ export default {
         })
       } catch(e) {
         console.log(e);
+      }
+    },
+    changeIdsType() {
+      if(this.form.isd_type != 'DESIGNATE') {
+        this.form.isd_id = null
+        this.form.isd_name = null
       }
     }
   }

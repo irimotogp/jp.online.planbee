@@ -21,9 +21,18 @@ class Product extends Model
         'product_name',
         'display_name',
         'introducer_type',
+        'cashback'
+    ];
+
+    protected $appends = [
+        'cashback_text',
     ];
 
     public function agency() {
         return $this->hasMany(Agency::class);
+    }
+
+    public function getCashBackTextAttribute() {
+        return $this->cashback ? 'ON' : 'OFF';
     }
 }

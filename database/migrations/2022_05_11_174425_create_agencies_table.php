@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 use App\Enums\SexType;
 use App\Enums\ContractType;
 use App\Enums\DepositType;
+use App\Enums\ShippingAddressType;
+
 
 class CreateAgenciesTable extends Migration
 {
@@ -42,8 +44,7 @@ class CreateAgenciesTable extends Migration
             $table->string('phone_email')->nullable()->commet('携帯メール');
             $table->string('work_place_name')->nullable()->commet('勤務先名');
             
-            $table->bigInteger('shipping_address_id')->nullable()->unsigned()->comment('配送先指定');
-            $table->foreign('shipping_address_id')->references('id')->on('shipping_addresses');
+            $table->enum('shipping_address_type', ShippingAddressType::ALL_OPTIONS)->nullable()->commet('配送先指定');
 
             $table->string('zip2')->nullable()->commet('配送先-郵便番号');
             $table->string('pref2')->nullable()->commet('配送先-都道府県');
@@ -52,10 +53,6 @@ class CreateAgenciesTable extends Migration
             
             $table->string('receiver_name')->nullable()->commet('宛名');
             $table->string('receiver_phone')->nullable()->commet('宛先電話番号');
-            $table->string('syoukai_id')->nullable()->commet('紹介取次店ID');
-            $table->string('syoukai_name')->nullable()->commet('紹介取次店名');
-            $table->string('eva_id')->nullable()->commet('エバンジェリストID');
-            $table->string('eva_name')->nullable()->commet('エバンジェリスト名');
 
             $table->enum('contract_type', ContractType::ALL_OPTIONS)->nullable()->commet('契約タイプ');
             

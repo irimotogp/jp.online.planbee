@@ -5,6 +5,6 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('agency') }}'><i class='nav-icon la la-question'></i>オンライン取次店登録申請リスト</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('customer') }}'><i class='nav-icon la la-question'></i>オンラインレンタル申し込みリスト</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('product') }}'><i class='nav-icon la la-question'></i>商品</a></li>
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('shipping-address') }}'><i class='nav-icon la la-question'></i>発送先</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('deposit') }}'><i class='nav-icon la la-question'></i>預金種目</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('privacy') }}'><i class='nav-icon la la-question'></i>プライバシーポリシー</a></li>
 <?php endif; ?>

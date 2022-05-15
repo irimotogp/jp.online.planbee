@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\IntroducerType;
 
-class ShippingAddressRequest extends FormRequest
+class PrivacyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +26,8 @@ class ShippingAddressRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required'
+            'introducer_type' => 'required|in:' . implode(",", IntroducerType::ALL_OPTIONS),
+            'title' => 'required',
         ];
     }
 
@@ -37,7 +39,8 @@ class ShippingAddressRequest extends FormRequest
     public function attributes()
     {
         return [
-            'name' => '発送先名'
+            'introducer_type' => 'タイプ',
+            'title' => 'タイトル',
         ];
     }
 

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ShippingAddress extends Model
+class Privacy extends Model
 {
     use \Backpack\CRUD\app\Models\Traits\CrudTrait;
     use HasFactory;
@@ -17,10 +17,7 @@ class ShippingAddress extends Model
      */
     protected $fillable = [
         'id',
-        'name',
+        'introducer_type',
+        'title',
     ];
-
-    public function agency() {
-        return $this->hasMany(Agency::class);
-    }
 }

@@ -3,8 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\IntroducerType;
 
-class CreateShippingAddressesTable extends Migration
+class CreatePrivaciesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +14,10 @@ class CreateShippingAddressesTable extends Migration
      */
     public function up()
     {
-        Schema::create('shipping_addresses', function (Blueprint $table) {
+        Schema::create('privacies', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable()->comment('発送先名');
+            $table->enum('introducer_type', IntroducerType::ALL_OPTIONS)->nullable()->commet('タイプ');
+            $table->text('title')->nullable()->commet('タイトル');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ class CreateShippingAddressesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shipping_addresses');
+        Schema::dropIfExists('privacies');
     }
 }

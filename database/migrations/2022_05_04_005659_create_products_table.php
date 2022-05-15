@@ -19,6 +19,7 @@ class CreateProductsTable extends Migration
             $table->integer('code')->nullable()->comment('Code');
             $table->string('product_name')->nullable()->comment('商品名');
             $table->string('display_name')->nullable()->comment('表示名');
+            $table->boolean('cashback')->default(0)->commet('キャッシュバック対象');
             $table->enum('introducer_type', IntroducerType::ALL_OPTIONS)->nullable()->commet('タイプ');
             $table->timestamps();
         });

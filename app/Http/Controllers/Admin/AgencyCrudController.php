@@ -8,6 +8,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Enums\SexType;
 use App\Enums\ContractType;
 use App\Enums\DepositType;
+use App\Enums\ShippingAddressType;
 
 /**
  * Class AgencyCrudController
@@ -179,14 +180,12 @@ class AgencyCrudController extends CrudController
             'type'      => 'text',
             'name'      => 'work_place_name'
         ]);
-        
+
         $this->crud->addColumn([
             'label' => '発送先指定',
-            'type' => 'select',
-            'name' => 'shipping_address_id',
-            'attribute' => 'name',
-            'entity' => 'shipping_address',
-            'model' => "App\Models\ShippingAddress",
+            'type' => 'select_from_array',
+            'name' => 'shipping_address_type',
+            'options' => \App\Enums\ShippingAddressType::getAllValues(),
         ]);
         $this->crud->addColumn([
             'label'     => 'H郵便番号',
@@ -242,34 +241,36 @@ class AgencyCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'label'     => '紹介者ID',
+            'label'     => '紹介取次店ID',
             'type'      => 'text',
-            'name'      => 'syoukai_id'
+            'name'      => 'syoukai_id_text'
         ]);
         $this->crud->addColumn([
-            'label'     => '紹介者名',
+            'label'     => '紹介取次店名',
             'type'      => 'text',
-            'name'      => 'syoukai_name'
+            'name'      => 'syoukai_name_text'
         ]);
         $this->crud->addColumn([
             'label'     => 'SUｻﾎﾟｰﾀｰID',
             'type'      => 'text',
-            'name'      => 'eva_id'
+            'name'      => 'eva_id_text'
         ]);
         $this->crud->addColumn([
             'label'     => 'SUｻﾎﾟｰﾀｰ名',
             'type'      => 'text',
-            'name'      => 'eva_name'
+            'name'      => 'eva_name_text'
         ]);
-        
         $this->crud->addColumn([
             'label'     => '直上者ID',
             'type'      => 'text',
+            'name'      => 'isd_id_text'
         ]);
         $this->crud->addColumn([
             'label'     => '直上者名',
             'type'      => 'text',
+            'name'      => 'isd_name_text'
         ]);
+
         $this->crud->addColumn([
             'label'     => 'ﾗｲﾝ',
             'type'      => 'text',

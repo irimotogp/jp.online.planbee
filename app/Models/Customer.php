@@ -57,7 +57,13 @@ class Customer extends Model
     protected $appends = [
         'kanji',
         'kata',
-        'introducer_type'
+        'introducer_type',
+        'syoukai_id_text',
+        'syoukai_name_text',
+        'eva_id_text',
+        'eva_name_text',
+        'isd_id_text',
+        'isd_name_text',
     ];
     
     public function introducer() {
@@ -94,6 +100,22 @@ class Customer extends Model
 
     public function getIdentityDoc2Attribute($value) {
         return $this->getImage($value);
+    }
+
+    public function getSyoukaiIdTextAttribute($value) {
+        return $this->introducer->syoukai_id;
+    }
+
+    public function getSyoukaiNameTextAttribute($value) {
+        return $this->introducer->syoukai_name;
+    }
+
+    public function getEvaIdTextAttribute($value) {
+        return $this->introducer->eva_id;
+    }
+
+    public function getEvaNameTextAttribute($value) {
+        return $this->introducer->eva_name;
     }
 
     public function setIdentityDocAttribute($value) {

@@ -23,14 +23,14 @@
     </div>
 
     <div class="mb-3 row">
-      <label class="col-md-4 col-form-label text-md-right">番地まで</label>
+      <label class="col-md-4 col-form-label text-md-right">住所１（番地まで）</label>
       <div class="col-md-8">
         <input @change="change" v-model="data.city" :class="{ 'is-invalid': form.errors.has(city_t) }" class="form-control" type="text" :name="city_t" :id="city_t">
         <has-error :form="form" :field="city_t" />
       </div>
     </div>
     <div class="mb-3 row">
-      <label class="col-md-4 col-form-label text-md-right">マンション名・号室</label>
+      <label class="col-md-4 col-form-label text-md-right">住所２（マンション名・号室）</label>
       <div class="col-md-8">
         <input @change="change" v-model="data.addr" :class="{ 'is-invalid': form.errors.has(addr_t) }" class="form-control" type="text" :name="addr_t" :id="addr_t">
         <has-error :form="form" :field="addr_t" />

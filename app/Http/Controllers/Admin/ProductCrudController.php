@@ -56,6 +56,11 @@ class ProductCrudController extends CrudController
             'name'      => 'display_name', 
         ]);
         $this->crud->addColumn([
+            'label'     => 'キャッシュバック対象',
+            'type'      => 'text',
+            'name'      => 'cashback_text', 
+        ]);
+        $this->crud->addColumn([
             'label' => '店舗タイプ',
             'type' => 'select_from_array',
             'name' => 'introducer_type',
@@ -88,6 +93,11 @@ class ProductCrudController extends CrudController
             'label'     => '表示名',
             'type'      => 'text',
             'name'      => 'display_name', 
+        ]);
+        $this->crud->addField([
+            'label'     => 'キャッシュバック対象',
+            'type'      => 'checkbox',
+            'name'      => 'cashback', 
         ]);
         $this->crud->addField([
             'label' => '店舗タイプ',

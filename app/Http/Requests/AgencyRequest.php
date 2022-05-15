@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Enums\SexType;
 use App\Enums\ContractType;
 use App\Enums\DepositType;
+use App\Enums\ShippingAddressType;
 
 class AgencyRequest extends FormRequest
 {
@@ -45,17 +46,13 @@ class AgencyRequest extends FormRequest
             'pc_email' => 'required|email:filter|max:255',
             'phone_email' => 'required|email:filter|max:255',
             'work_place_name' => 'required',
-            'shipping_address_id' => 'required|exists:shipping_addresses,id',
-            'zip2' => 'required',
-            'pref2' => 'required',
+            'shipping_address_type' => 'nullable|in:' . implode(",", ShippingAddressType::ALL_OPTIONS) . '|required_if:contract_type,' . ContractType::BULK,
+            'zip2' => 'required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
+            'pref2' => 'required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
             'city2' => '',
             'addr2' => '',
-            'receiver_name' => 'required',
-            'receiver_phone' => 'required|numeric|digits:11',
-            'syoukai_id' => 'required',
-            'syoukai_name' => 'required',
-            'eva_id' => 'required',
-            'eva_name' => 'required',
+            'receiver_name' => 'required_if:contract_type,' . ContractType::BULK,
+            'receiver_phone' => 'nullable|numeric|digits:11|required_if:contract_type,' . ContractType::BULK,
             'contract_type' => 'required|in:' . implode(",", ContractType::ALL_OPTIONS),
             'product_id' => 'required|exists:products,id',
             'bank_name' => 'required',
@@ -64,6 +61,7 @@ class AgencyRequest extends FormRequest
             'branch_code' => 'required',
             'deposit_id' => 'required|exists:deposits,id',
             'account_number' => 'required',
+            'identity_doc' => 'required'
         ];
     }
 
@@ -99,10 +97,6 @@ class AgencyRequest extends FormRequest
             'addr2' => '住所２（マンション名・号室）',
             'receiver_name' => '宛名',
             'receiver_phone' => '宛先電話番号',
-            'syoukai_id' => '紹介取次店ID',
-            'syoukai_name' => '紹介取次店名',
-            'eva_id' => 'エバンジェリストID',
-            'eva_name' => 'エバンジェリスト名',
             'contract_type' => '契約タイプ',
             'product_id' => '契約商品',
             'bank_name' => '銀行名',
@@ -124,6 +118,11 @@ class AgencyRequest extends FormRequest
     public function messages()
     {
         return [
+            'shipping_address_type.required_if' => '配送先指定は、必ず入力してください。',
+            'zip2.required_if' => '郵便番号は、必ず入力してください。',
+            'pref2.required_if' => '都道府県は、必ず入力してください。',
+            'receiver_name.required_if' => '宛名は、必ず入力してください。',
+            'receiver_phone.required_if' => '宛先電話番号は、必ず入力してください。',
         ];
     }
     public function withValidator($validator)

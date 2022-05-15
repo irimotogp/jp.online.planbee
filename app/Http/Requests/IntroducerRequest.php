@@ -32,12 +32,12 @@ class IntroducerRequest extends FormRequest
             'introducer_type' => 'required|in:' . implode(",", IntroducerType::ALL_OPTIONS),
             'syoukai_id' => 'required',
             'syoukai_name' => 'required',
-            'eva_id' => 'required',
-            'eva_name' => 'required',
+            'eva_id' => 'required_if:introducer_type,' . IntroducerType::AGENCY,
+            'eva_name' => 'required_if:introducer_type,' . IntroducerType::AGENCY,
             'nth_type' => 'required|in:' . implode(",", NthType::ALL_OPTIONS),
             'isd_type' => 'required|in:' . implode(",", ISDType::ALL_OPTIONS),
-            'isd_id' => 'required',
-            'isd_name' => 'required',
+            'isd_id' => 'required_if:isd_type,' . ISDType::DESIGNATE,
+            'isd_name' => 'required_if:isd_type,' . ISDType::DESIGNATE,
         ];
     }
 
@@ -74,6 +74,10 @@ class IntroducerRequest extends FormRequest
             'type.required' => '必ず選択してください。',
             'nth.required' => '必ず選択してください。',
             'isd.required' => '必ず選択してください。',
+            'eva_id.required_if' => 'エバンジェリストIDを指定してください。',
+            'eva_name.required_if' => 'エバンジェリストIDを指定してください。',
+            'isd_id.required_if' => '直上者IDを指定してください。',
+            'isd_name.required_if' => '直上者名を指定してください。',
         ];
     }
 }

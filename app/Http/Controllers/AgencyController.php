@@ -15,6 +15,8 @@ use App\Models\Agency;
 
 use App\Http\Requests\AgencyRequest;
 
+use App\Models\Privacy;
+
 class AgencyController extends Controller
 {
     public function index($uuid) {
@@ -31,11 +33,13 @@ class AgencyController extends Controller
                     'error' => '有効期限が切れました。',
                 ];
             } else {
-                $shipping_address_options = ShippingAddress::query()
-                    ->select(\DB::raw('id as value, name as text'))
+                $privacies = Privacy::query()
+                    ->whereIn('introducer_type', [IntroducerType::AGENCY, IntroducerType::ALL])
+                    ->select(\DB::raw('title as text'))
                     ->get();
                 $product_options = Product::query()
-                    ->where('introducer_type', IntroducerType::AGENCY)
+                    ->whereIn('introducer_type', [IntroducerType::AGENCY, IntroducerType::ALL])
+                    ->where('cashback', 1)
                     ->select(\DB::raw('id as value, product_name as text'))
                     ->get();
                 $deposit_options = Deposit::query()
@@ -43,9 +47,13 @@ class AgencyController extends Controller
                     ->get();
                 return [
                     'status' => 'success',
-                    'shipping_address_options' => $shipping_address_options,
+                    'syoukai_id' => $introducer->syoukai_id,
+                    'syoukai_name' => $introducer->syoukai_name,
+                    'eva_id' => $introducer->eva_id,
+                    'eva_name' => $introducer->eva_name,
                     'product_options' => $product_options,
                     'deposit_options' => $deposit_options,
+                    'privacies' => $privacies,
                 ];
             }
         } else {

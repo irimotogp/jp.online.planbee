@@ -5,10 +5,11 @@ $config = [
     'locales' => config('app.locales'),
     'githubAuth' => config('services.github.client_id'),
     'ContractType' => App\Enums\ContractType::getAllValues(),
-    'IntroducerType' => App\Enums\IntroducerType::getAllValues(),
+    'IntroducerType' => App\Enums\IntroducerType::getFrontAllValues(),
     'ISDType' => App\Enums\ISDType::getAllValues(),
     'NthType' => App\Enums\NthType::getAllValues(),
     'SexType' => App\Enums\SexType::getAllValues(),
+    'ShippingAddressType' =>  App\Enums\ShippingAddressType::getAllValues()
 ];
 $appJs = mix('dist/js/app.js');
 $appCss = mix('dist/css/app.css');

@@ -7,13 +7,14 @@ use Carbon\Carbon;
 
 use App\Enums\IntroducerType;
 
-use App\Models\ShippingAddress;
 use App\Models\Product;
 use App\Models\Deposit;
 use App\Models\Introducer;
 use App\Models\Customer;
 
 use App\Http\Requests\CustomerRequest;
+
+use App\Models\Privacy;
 
 class CustomerController extends Controller
 {
@@ -32,11 +33,13 @@ class CustomerController extends Controller
                     'error' => '有効期限が切れました。',
                 ];
             } else {
-                $shipping_address_options = ShippingAddress::query()
-                    ->select(\DB::raw('id as value, name as text'))
+                $privacies = Privacy::query()
+                    ->whereIn('introducer_type', [IntroducerType::CUSTOMER, IntroducerType::ALL])
+                    ->select(\DB::raw('title as text'))
                     ->get();
                 $product_options = Product::query()
-                    ->where('introducer_type', IntroducerType::CUSTOMER)
+                    ->whereIn('introducer_type', [IntroducerType::CUSTOMER, IntroducerType::ALL])
+                    ->where('cashback', 1)
                     ->select(\DB::raw('id as value, product_name as text'))
                     ->get();
                 $deposit_options = Deposit::query()
@@ -44,9 +47,13 @@ class CustomerController extends Controller
                     ->get();
                 return [
                     'status' => 'success',
-                    'shipping_address_options' => $shipping_address_options,
+                    'syoukai_id' => $introducer->syoukai_id,
+                    'syoukai_name' => $introducer->syoukai_name,
+                    'eva_id' => $introducer->eva_id,
+                    'eva_name' => $introducer->eva_name,
                     'product_options' => $product_options,
                     'deposit_options' => $deposit_options,
+                    'privacies' => $privacies,
                 ];
             }
         } else {

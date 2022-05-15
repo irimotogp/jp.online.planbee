@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\ShippingAddressRequest;
+use App\Http\Requests\PrivacyRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class ShippingAddressCrudController
+ * Class PrivacyCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class ShippingAddressCrudController extends CrudController
+class PrivacyCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,9 +26,9 @@ class ShippingAddressCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\ShippingAddress::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/shipping-address');
-        CRUD::setEntityNameStrings('', '発送先');
+        CRUD::setModel(\App\Models\Privacy::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/privacy');
+        CRUD::setEntityNameStrings('', 'プライバシーポリシー');
         $this->crud->denyAccess(['show']);
     }
 
@@ -41,9 +41,15 @@ class ShippingAddressCrudController extends CrudController
     protected function setupListOperation()
     {
         $this->crud->addColumn([
-            'label'     => '発送先指定名',
+            'label' => 'タイプ',
+            'type' => 'select_from_array',
+            'name' => 'introducer_type',
+            'options' => \App\Enums\IntroducerType::getAllValues(),
+        ]);
+        $this->crud->addColumn([
+            'label'     => 'タイトル',
             'type'      => 'text',
-            'name'      => 'name', 
+            'name'      => 'title', 
         ]);
 
         /**
@@ -61,12 +67,18 @@ class ShippingAddressCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(ShippingAddressRequest::class);
+        CRUD::setValidation(PrivacyRequest::class);
 
         $this->crud->addField([
-            'label'     => '発送先名',
+            'label' => 'タイプ',
+            'type' => 'select_from_array',
+            'name' => 'introducer_type',
+            'options' => \App\Enums\IntroducerType::getAllValues(),
+        ]);
+        $this->crud->addField([
+            'label'     => 'タイトル',
             'type'      => 'text',
-            'name'      => 'name', 
+            'name'      => 'title', 
         ]);
 
         /**

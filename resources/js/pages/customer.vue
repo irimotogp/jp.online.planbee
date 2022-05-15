@@ -14,9 +14,9 @@
             <label>プランビーへようこそ！<br>レンタル申し込みに進む前に、重要事項の確認を行なってください。<br>下記の重要事項について説明を受け、了承・同意される場合、□に✔️を入れてください。</label>
           </div>
           <div class="list">
-            <div v-for="(item, index) in privacy" :key="index" class="mb-2 item">
+            <div v-for="(item, index) in privacies" :key="index" class="mb-2 item">
               <b-form-checkbox
-                :id="`privacy_${index}`"
+                :id="`privacies_${index}`"
                 v-model="item.value"
                 value="1"
                 unchecked-value="0"
@@ -95,7 +95,8 @@
           <div class="mb-3 row">
             <label class="col-md-4 col-form-label text-md-right">自宅電話番号</label>
             <div class="col-md-6">
-              <input v-model="form.home_phone" :class="{ 'is-invalid': form.errors.has('phone_any') }" class="form-control" type="text" name="home_phone" id="home_phone" placeholder="01234567890">
+              <input v-model="form.home_phone" :class="{ 'is-invalid': form.errors.has('phone_any') || form.errors.has('home_phone') }" class="form-control" type="text" name="home_phone" id="home_phone" placeholder="01234567890">
+              <has-error :form="form" field="home_phone" />
               <has-error :form="form" field="phone_any" />
             </div>
           </div>
@@ -111,7 +112,8 @@
           <div class="mb-3 row">
             <label class="col-md-4 col-form-label text-md-right">携帯電話</label>
             <div class="col-md-6">
-              <input v-model="form.mobile_phone" :class="{ 'is-invalid': form.errors.has('phone_any') }" class="form-control" type="text" name="mobile_phone" id="mobile_phone" placeholder="01234567890">
+              <input v-model="form.mobile_phone" :class="{ 'is-invalid': form.errors.has('phone_any') || form.errors.has('mobile_phone') }" class="form-control" type="text" name="mobile_phone" id="mobile_phone" placeholder="01234567890">
+              <has-error :form="form" field="mobile_phone" />
               <has-error :form="form" field="phone_any" />
             </div>
           </div>
@@ -149,46 +151,10 @@
           </div>
           
           <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-right">配送先指定</label>
-            <div class="col-md-8">
-              <b-form-select 
-                id="radiobox-group-shipping_address_id"
-                v-model="form.shipping_address_id"
-                :options="shipping_address_options"
-                :class="{ 'is-invalid': form.errors.has('shipping_address_id') }"></b-form-select>
-              <has-error :form="form" field="shipping_address_id" />
-            </div>
-          </div>
-
-          <zip-code 
-            zip_t="zip2"
-            pref_t="pref2"
-            city_t="city2"
-            addr_t="addr2"
-            :pref_options="pref_options"
-            :form="form"
-            @update="updateZipCode2"/>
-            
-          <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-right">宛名</label>
-            <div class="col-md-6">
-              <input v-model="form.receiver_name" :class="{ 'is-invalid': form.errors.has('receiver_name') }" class="form-control" type="text" name="receiver_name" id="receiver_name">
-              <has-error :form="form" field="receiver_name" />
-            </div>
-          </div>
-            
-          <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-right">宛先電話番号</label>
-            <div class="col-md-6">
-              <input v-model="form.receiver_phone" :class="{ 'is-invalid': form.errors.has('receiver_phone') }" class="form-control" type="text" name="receiver_phone" id="receiver_phone" placeholder="01234567890">
-              <has-error :form="form" field="receiver_phone" />
-            </div>
-          </div>
-          
-          <div class="mb-3 row">
             <label class="col-md-4 col-form-label text-md-right">契約タイプ</label>
             <div class="col-md-8">
               <b-form-radio-group
+                @change="changeContractType"
                 id="radiobox-group-contract_type"
                 v-model="form.contract_type"
                 class="mt-2"
@@ -196,6 +162,63 @@
                 :class="{ 'is-invalid': form.errors.has('contract_type') }"
               ></b-form-radio-group>
               <has-error :form="form" field="contract_type" />
+            </div>
+          </div>
+          
+          <template v-if="form.contract_type == 'BULK'">
+            <div class="mb-3 row">
+              <label class="col-md-4 col-form-label text-md-right">配送先指定</label>
+              <div class="col-md-8">
+                <b-form-select 
+                  @change="changeShippingAddressType"
+                  id="radiobox-group-shipping_address_type"
+                  v-model="form.shipping_address_type"
+                  :options="shipping_address_options"
+                  :class="{ 'is-invalid': form.errors.has('shipping_address_type') }"></b-form-select>
+                <has-error :form="form" field="shipping_address_type" />
+              </div>
+            </div>
+
+            <zip-code 
+              v-if="form.shipping_address_type != 'CURRENT'"
+              zip_t="zip2"
+              pref_t="pref2"
+              city_t="city2"
+              addr_t="addr2"
+              :pref_options="pref_options"
+              :form="form"
+              @update="updateZipCode2"/>
+              
+            <div class="mb-3 row">
+              <label class="col-md-4 col-form-label text-md-right">宛名</label>
+              <div class="col-md-6">
+                <input v-model="form.receiver_name" :class="{ 'is-invalid': form.errors.has('receiver_name') }" class="form-control" type="text" name="receiver_name" id="receiver_name">
+                <has-error :form="form" field="receiver_name" />
+              </div>
+            </div>
+              
+            <div class="mb-3 row">
+              <label class="col-md-4 col-form-label text-md-right">宛先電話番号</label>
+              <div class="col-md-6">
+                <input v-model="form.receiver_phone" :class="{ 'is-invalid': form.errors.has('receiver_phone') }" class="form-control" type="text" name="receiver_phone" id="receiver_phone" placeholder="01234567890">
+                <has-error :form="form" field="receiver_phone" />
+              </div>
+            </div>
+          </template>
+            
+          <div class="mb-3 row">
+            <label class="col-md-4 col-form-label text-md-right">紹介取次店ID</label>
+            <div class="col-md-6">
+              <input disabled v-model="form.syoukai_id" :class="{ 'is-invalid': form.errors.has('syoukai_id') }" class="form-control" type="text" name="syoukai_id" id="syoukai_id">
+              <has-error :form="form" field="syoukai_id" />
+            </div>
+          </div>
+            
+          <div class="mb-3 row">
+            <label class="col-md-4 col-form-label text-md-right">紹介取次店名</label>
+            <div class="col-md-6">
+              <input disabled v-model="form.syoukai_name" :class="{ 'is-invalid': form.errors.has('syoukai_name') }" class="form-control" type="text" name="syoukai_name" id="syoukai_name">
+              <has-error :form="form" field="syoukai_name" />
             </div>
           </div>
           
@@ -287,11 +310,11 @@
               <td>{{ getTextOfOptions(form.pref1, pref_options, 'value', 'text') }}</td>
             </tr>
             <tr>
-              <th class="text-md-right">住所１</th>
+              <th class="text-md-right">住所１（番地まで）</th>
               <td>{{ form.city1 }}</td>
             </tr>
             <tr>
-              <th class="text-md-right">住所２</th>
+              <th class="text-md-right">住所２（マンション名・号室）</th>
               <td>{{ form.addr1 }}</td>
             </tr>
             <tr>
@@ -327,36 +350,48 @@
               <td>{{ form.work_place_name }}</td>
             </tr>
             <tr>
-              <th class="text-md-right">配送先指定</th>
-              <td>{{ getTextOfOptions(form.shipping_address_id, shipping_address_options, 'value', 'text') }}</td>
-            </tr>
-            <tr>
-              <th class="text-md-right">郵便番号</th>
-              <td>{{ form.zip2 }}</td>
-            </tr>
-            <tr>
-              <th class="text-md-right">都道府県</th>
-              <td>{{ getTextOfOptions(form.pref2, pref_options, 'value', 'text') }}</td>
-            </tr>
-            <tr>
-              <th class="text-md-right">住所１</th>
-              <td>{{ form.city2 }}</td>
-            </tr>
-            <tr>
-              <th class="text-md-right">住所２</th>
-              <td>{{ form.addr2 }}</td>
-            </tr>
-            <tr>
-              <th class="text-md-right">宛名</th>
-              <td>{{ form.receiver_name }}</td>
-            </tr>
-            <tr>
-              <th class="text-md-right">宛先電話番号</th>
-              <td>{{ form.receiver_phone }}</td>
-            </tr>
-            <tr>
               <th class="text-md-right">契約タイプ</th>
               <td>{{ getTextOfOptions(form.contract_type, contract_options) }}</td>
+            </tr>
+            <template v-if="form.contract_type == 'BULK'">
+              <tr>
+                <th class="text-md-right">配送先指定</th>
+                <td>{{ getTextOfOptions(form.shipping_address_type, shipping_address_options) }}</td>
+              </tr>
+              <template v-if="form.shipping_address_type != 'CURRENT'">
+                <tr>
+                  <th class="text-md-right">郵便番号</th>
+                  <td>{{ form.zip2 }}</td>
+                </tr>
+                <tr>
+                  <th class="text-md-right">都道府県</th>
+                  <td>{{ getTextOfOptions(form.pref2, pref_options, 'value', 'text') }}</td>
+                </tr>
+                <tr>
+                  <th class="text-md-right">住所１（番地まで）</th>
+                  <td>{{ form.city2 }}</td>
+                </tr>
+                <tr>
+                  <th class="text-md-right">住所２（マンション名・号室）</th>
+                  <td>{{ form.addr2 }}</td>
+                </tr>
+              </template>
+              <tr>
+                <th class="text-md-right">宛名</th>
+                <td>{{ form.receiver_name }}</td>
+              </tr>
+              <tr>
+                <th class="text-md-right">宛先電話番号</th>
+                <td>{{ form.receiver_phone }}</td>
+              </tr>
+            </template>
+            <tr>
+              <th class="text-md-right">紹介取次店ID</th>
+              <td>{{ form.syoukai_id }}</td>
+            </tr>
+            <tr>
+              <th class="text-md-right">紹介取次店名</th>
+              <td>{{ form.syoukai_name }}</td>
             </tr>
             <tr>
               <th class="text-md-right">契約商品</th>
@@ -440,13 +475,15 @@ export default {
     this.uuid = uuid
     this.form.uuid = uuid
     this.fetch()
-    this.type_options = window.config.UserType
-    this.nth_options = window.config.NthType
-    this.isd_options = window.config.ISDType
-    this.contract_options = window.config.ContractType
     this.sex_options = window.config.SexType
+    this.contract_options = window.config.ContractType
+    this.shipping_address_options = window.config.ShippingAddressType
+    this.form.sex_type = 'MALE'
+    this.form.contract_type = 'NORMAL'
+    this.form.shipping_address_type = 'CURRENT'
   },
-
+  watch: {
+  },
   data: () => ({
     title: "オンラインレンタル申し込み",
     loading: true,
@@ -454,13 +491,22 @@ export default {
     step: 1,
     show_errors: false,
     form: new Form({
+      sex_type: null,
+      contract_type: null,
+      shipping_address_type: null,
+      zip2: null,
+      pref2: null,
+      city2: null,
+      addr2: null,
+      receiver_name: null,
+      receiver_phone: null,
     }),
-    isd_options: {},
-    nth_options: {},
-    type_options: {},
-    shipping_address_options: [],
+    sex_options: {},
+    contract_options: {},
+    shipping_address_options: {},
     product_options: [],
     deposit_options: [],
+    privacies: [],
     pref_options:  [
       { value: 1, text: "北海道" },
       { value: 2, text: "青森県" },
@@ -511,18 +557,6 @@ export default {
       { value: 47, text: "沖縄県" },
       { value: 99, text: "海外" }
     ],
-    privacy: [
-      { value: 0, text: "強引・無理矢理な勧誘はなく、商品や契約内容を理解できる説明を受けました。"},
-      { value: 0, text: "商品および契約書面が届いた日から20日を経過するまでは、書面により無条件で契約の解除を行うことができるクーリング・オフについて説明を受けました。（法人は対象外です）"},
-      { value: 0, text: "最低利用期間である1年以内に解約する場合、解約手数料(税込10,450円)を支払うことに同意しました。"},
-      { value: 0, text: "支払日は毎月20日(口座振替払いのみ金融機関休業日の場合は翌営業日)です。支払いが25日を過ぎた場合、再請求手数料 (税込800円)が発生し、報酬から相殺または銀行振込にて精算することに同意しました。"},
-      { value: 0, text: "3年経過後は、いつでも買取できますが、所定の買取申請が必要です。申請するまで同一条件でレンタル自動継続となる ことに同意しました。"},
-      { value: 0, text: "5年経過後は、いつでも交換プログラム(新品商品に交換または他契約プランへ変更)を利用できますが、所定の申請が必要 です。申請をするまで同一条件でレンタル自動継続となることに同意しました。月額料金のお支払いが翌月以降になった場合、PRVが発生せず遅延回数にカウントされます。 遅延回数が累積5回以上になると、交換プログラムが受けられなくなります。"},
-      { value: 0, text: "レンタル特典についての説明を受け理解しました。詳細は概要書面をご確認ください。月額料金に未払いがある場合、全ての特典が受けられません。"},
-      { value: 0, text: "還元水素水の効果・効能が認められているのは、「胃腸症状の改善効果」のみです。汲みたての還元水素水を飲用し続けることで効果が期待できますが、個人差があり、効果を保証するものではありません。 勧誘時、他の病気が治るなどのことは発言しないようにしてください。"},
-      { value: 0, text: "水分摂取やミネラル摂取を制限されている方に還元水素水の飲用をお勧めする場合、還元水素水は水道水に比べてカリウムやカルシウム等のミネラルが多く含まれますが、バナナやアボカドに比べると少量です。 ご心配の場合は、かかりつけの医師にご相談されることをおすすめしてください。詳細は<a href='http://planbee.co.jp/faq/%E9%9B%BB%E8%A7%A3%E6%B0%B4%E7%94%9F%E6%88%90%E5%99%A8%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/beefine/1310'>こちら</a>からご確認ください"},
-      { value: 0, text: "当社の個人情報保護方針を理解し、同意しました。<br>当社の個人情報保護については<a href='http://planbee.co.jp/privacy/'>こちら</a>からご確認ください。"},
-    ],
   }),
 
   methods: {
@@ -530,9 +564,13 @@ export default {
       try {
         const { data } = await axios.get(`/api/customer/${this.uuid}`)
         if(data.status == 'success') {
-          this.shipping_address_options = data.shipping_address_options
           this.product_options = data.product_options
           this.deposit_options = data.deposit_options
+          this.privacies = data.privacies.map((x) => { x.value = 0; return x; })
+          this.form.syoukai_id = data.syoukai_id
+          this.form.syoukai_name = data.syoukai_name
+          this.form.eva_id = data.eva_id
+          this.form.eva_name = data.eva_name
           this.loading = false
         } else {
           Swal.fire({
@@ -633,7 +671,7 @@ export default {
     },
     next_step(value) {
       if(value == 2) {
-        let items = this.privacy.filter((x) => { return x.value == 0})
+        let items = this.privacies.filter((x) => { return x.value == 0})
         if(items.length > 0) this.show_errors = true
         else this.step = 2
       } else {
@@ -644,14 +682,31 @@ export default {
       this.step = 2
     },
     getTextOfOptions(value, options, value_label = null, text_label = null) {
-      console.log('-----value--------', value)
-      console.log('-----options--------', options)
       if(value_label == null) {
         const key = Object.keys(options).find(x => x == value)
         if(key) { return options[key] } else { return "" }
       } else {
         const option = options.find(x => x[value_label] == value)
         if(option) { return option[text_label] } else { return "" }
+      }
+    },
+    changeContractType() {
+      if(this.form.contract_type != 'BULK') {
+        this.form.shipping_address_type = null
+        this.form.zip2 = null
+        this.form.pref2 = null
+        this.form.city2 = null
+        this.form.addr2 = null
+        this.form.receiver_name = null
+        this.form.receiver_phone = null
+      }
+    },
+    changeShippingAddressType(value) {
+      if(this.form.shipping_address_type == 'CURRENT') {
+        this.form.zip2 = null
+        this.form.pref2 = null
+        this.form.city2 = null
+        this.form.addr2 = null
       }
     },
     updateZipCode1(data) {
