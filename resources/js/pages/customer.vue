@@ -26,7 +26,7 @@
             </div>
           </div>
           <div class="mt-5 text-center">
-            <a @click="next_step()" class="btn btn-main">登録申請に進む</a>
+            <a @click="next_step(2)" class="btn btn-main">登録申請に進む</a>
           </div>
         </div>
       </card>
@@ -255,7 +255,7 @@
             />
 
           <div class="mt-5 text-center">
-            <a @click="next_step()" class="btn btn-main">確認</a>
+            <a @click="next_step(3)" class="btn btn-main">確認</a>
           </div>
         </div>
       </card>
@@ -632,7 +632,7 @@ export default {
       this.form[name] = result
     },
     next_step(value) {
-      if(value == 1) {
+      if(value == 2) {
         let items = this.privacy.filter((x) => { return x.value == 0})
         if(items.length > 0) this.show_errors = true
         else this.step = 2
