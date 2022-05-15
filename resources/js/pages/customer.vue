@@ -441,9 +441,7 @@
           <div class="mt-5 row">
             <div class="col-md-8 offset-md-4 text-center text-md-left">
               <a @click="back_step()" class="btn btn-main mr-2">戻る</a>
-              <v-button :loading="form.busy">
-                {{ $t('register') }}
-              </v-button>
+              <v-button :loading="form.busy">送信</v-button>
             </div>
           </div>
         </div>
