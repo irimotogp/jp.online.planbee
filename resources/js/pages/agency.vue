@@ -499,7 +499,7 @@ export default {
     title: 'オンライン取次店登録申請',
     loading: true,
     uuid: null,
-    step: 2,
+    step: 1,
     show_errors: false,
     form: new Form({
     }),

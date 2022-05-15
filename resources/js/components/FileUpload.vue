@@ -3,7 +3,7 @@
       <label class="col-md-4 col-form-label text-md-right">{{ label }}</label>
       <div class="col-md-8">
         <div :class="{ 'is-invalid': form.errors.has(name) }" class="mt-2">
-          <input type="file" v-on:change="onFileChange" :name="name" accept="image/jpg, image/jpeg, image/png" class="form-control-file">
+          <input ref="file" type="file" v-on:change="onFileChange" :name="name" accept="image/jpg, image/jpeg, image/png" class="form-control-file">
           <img :src="image" class="img-responsive mt-2" v-if="image">
         </div>
         <has-error :form="form" :field="name" />
@@ -18,6 +18,13 @@
 <script>
     export default{
         props: [ 'form', 'name', 'label' ],
+        created() {
+          var image = this.form[this.name]
+          if(image) {
+            this.$refs.file = image
+            this.image = image
+          }
+        },
         data(){
             return {
                 image: ''
