@@ -6,6 +6,7 @@ export default [
   { path: '/', name: 'index', component: page('introducer.vue') },
   { path: '/agency/:uuid', name: 'agency', component: page('agency.vue') },
   { path: '/customer/:uuid', name: 'customer', component: page('customer.vue') },
+  { path: '/expired', name: 'expired', component: page('expired.vue') },
   // { path: '/login', name: 'login', component: page('auth/login.vue') },
   // { path: '/register', name: 'register', component: page('auth/register.vue') },
   // { path: '/password/reset', name: 'password.request', component: page('auth/password/email.vue') },

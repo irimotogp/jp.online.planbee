@@ -4,7 +4,14 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('introducer') }}'><i class='nav-icon la la-question'></i>登録紹介者リスト</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('agency') }}'><i class='nav-icon la la-question'></i>オンライン取次店登録申請リスト</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('customer') }}'><i class='nav-icon la la-question'></i>オンラインレンタル申し込みリスト</a></li>
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('product') }}'><i class='nav-icon la la-question'></i>商品</a></li>
+<li class='nav-item nav-dropdown'>
+  <a href="#" class='nav-link nav-dropdown-toggle'><i class='nav-icon la la-newspaper-o'></i>商品</a>
+  <ul class="nav-dropdown-items">
+    <li class='nav-item'><a class='nav-link' href='{{ backpack_url('product') }}'><i class='nav-icon la la-question'></i>リスト</a></li>
+    <li class='nav-item'><a class='nav-link' href='{{ backpack_url('product-option') }}'><i class='nav-icon la la-question'></i>オプション</a></li>
+    <li class='nav-item'><a class='nav-link' href='{{ backpack_url('product-field') }}'><i class='nav-icon la la-question'></i>分野</a></li>
+  </ul>
+</li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('deposit') }}'><i class='nav-icon la la-question'></i>預金種目</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('privacy') }}'><i class='nav-icon la la-question'></i>プライバシーポリシー</a></li>
 <?php endif; ?>

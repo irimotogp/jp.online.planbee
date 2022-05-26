@@ -9,7 +9,16 @@ $config = [
     'ISDType' => App\Enums\ISDType::getAllValues(),
     'NthType' => App\Enums\NthType::getAllValues(),
     'SexType' => App\Enums\SexType::getAllValues(),
-    'ShippingAddressType' =>  App\Enums\ShippingAddressType::getAllValues()
+    'ShippingAddressType' =>  App\Enums\ShippingAddressType::getAllValues(),
+    'WEGType' =>  App\Enums\WEGType::getAllValues(),
+    'InitialPaymentType' =>  App\Enums\InitialPaymentType::getAllValues(),
+    'PaymentNumberType' =>  App\Enums\PaymentNumberType::getAllValues(),
+    'CardCompanyType' =>  App\Enums\CardCompanyType::getAllValues(),
+    'MonthlyPaymentType' =>  App\Enums\MonthlyPaymentType::getAllValues(),
+    'DesireContacType' =>  App\Enums\DesireContacType::getAllValues(),
+    'DesireDateTimeType' =>  App\Enums\DesireDateTimeType::getAllValues(),
+    'BasicFeeType' => App\Enums\BasicFeeType::getAllValues(),
+    'CommercialPrivacyType' => App\Enums\CommercialPrivacyType::getAllValues(),
 ];
 $appJs = mix('dist/js/app.js');
 $appCss = mix('dist/css/app.css');

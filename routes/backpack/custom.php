@@ -18,6 +18,8 @@ Route::group([
         Route::crud('customer', 'CustomerCrudController');
         Route::crud('introducer', 'IntroducerCrudController');
         Route::crud('product', 'ProductCrudController');
+        Route::crud('product-option', 'ProductOptionCrudController');
+        Route::crud('product-field', 'ProductFieldCrudController');
         Route::crud('deposit', 'DepositCrudController');
         Route::crud('privacy', 'PrivacyCrudController');
     });

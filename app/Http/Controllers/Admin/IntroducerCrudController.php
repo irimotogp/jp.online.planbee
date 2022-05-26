@@ -8,6 +8,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Enums\IntroducerType;
 use App\Enums\NthType;
 use App\Enums\ISDType;
+use App\Enums\WEGType;
 
 /**
  * Class IntroducerCrudController
@@ -101,6 +102,17 @@ class IntroducerCrudController extends CrudController
             'label'     => '直上者名',
             'type'      => 'text',
             'name'      => 'isd_name', 
+        ]);
+        $this->crud->addColumn([
+            'label' => '直上者指定',
+            'type' => 'select_from_array',
+            'name' => 'weg_type',
+            'options' => \App\Enums\WEGType::getAllValues(),
+        ]);
+        $this->crud->addColumn([
+            'label'     => '備考',
+            'type'      => 'text',
+            'name'      => 'note', 
         ]);
         $this->crud->addColumn([
             'label'     => 'UUID',

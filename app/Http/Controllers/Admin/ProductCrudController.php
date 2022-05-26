@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\ProductRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use App\Enums\ContractType;
 
 /**
  * Class ProductCrudController
@@ -40,6 +41,7 @@ class ProductCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        $this->crud->disableResponsiveTable();
         $this->crud->addColumn([
             'label'     => 'CODE',
             'type'      => 'text',
@@ -56,6 +58,12 @@ class ProductCrudController extends CrudController
             'name'      => 'display_name', 
         ]);
         $this->crud->addColumn([
+            'label' => '購入コース',
+            'type' => 'select_from_array',
+            'name' => 'contract_type',
+            'options' => \App\Enums\ContractType::getPurchaseOptions(),
+        ]);
+        $this->crud->addColumn([
             'label'     => 'キャッシュバック対象',
             'type'      => 'text',
             'name'      => 'cashback_text', 
@@ -65,6 +73,24 @@ class ProductCrudController extends CrudController
             'type' => 'select_from_array',
             'name' => 'introducer_type',
             'options' => \App\Enums\IntroducerType::getAllValues(),
+        ]);
+        $this->crud->addColumn([
+            'label' => '分野',
+            'type' => 'select',
+            'name' => 'product_field_id',
+            'attribute' => 'name',
+            'entity' => 'product_Field',
+            'model' => "App\Models\ProductField",
+        ]);
+        $this->crud->addColumn([
+            'label'     => '初期費用',
+            'type'      => 'text',
+            'name'      => 'initial_price', 
+        ]);
+        $this->crud->addColumn([
+            'label'     => '月額料',
+            'type'      => 'text',
+            'name'      => 'month_price', 
         ]);
 
     }
@@ -95,6 +121,12 @@ class ProductCrudController extends CrudController
             'name'      => 'display_name', 
         ]);
         $this->crud->addField([
+            'label' => '購入コース',
+            'type' => 'select_from_array',
+            'name' => 'contract_type',
+            'options' => \App\Enums\ContractType::getPurchaseOptions(),
+        ]);
+        $this->crud->addField([
             'label'     => 'キャッシュバック対象',
             'type'      => 'checkbox',
             'name'      => 'cashback', 
@@ -105,7 +137,24 @@ class ProductCrudController extends CrudController
             'name' => 'introducer_type',
             'options' => \App\Enums\IntroducerType::getAllValues(),
         ]);
-
+        $this->crud->addField([
+            'label' => '分野',
+            'type' => 'select',
+            'name' => 'product_field_id',
+            'attribute' => 'name',
+            'entity' => 'product_Field',
+            'model' => "App\Models\ProductField",
+        ]);
+        $this->crud->addField([
+            'label'     => '初期費用',
+            'type'      => 'text',
+            'name'      => 'initial_price', 
+        ]);
+        $this->crud->addField([
+            'label'     => '月額料',
+            'type'      => 'text',
+            'name'      => 'month_price', 
+        ]);
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');

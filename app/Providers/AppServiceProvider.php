@@ -16,9 +16,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // if ($this->app->runningUnitTests()) {
-            Schema::defaultStringLength(191);
-        // }
+        Schema::defaultStringLength(191);
+        
+        // Validator::extend('alphabet', function ($attribute, $value, $parameters, $validator) {
+        //     return preg_match('/^[a-zA-Z]+$/', $value);
+        // });
     }
 
     /**

@@ -5,8 +5,8 @@
         <form @submit.prevent="register" @keydown="form.onKeydown($event)" class="py-3">
           <!-- sinsei_name -->
           <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-end">登録申請者氏名</label>
-            <div class="col-md-8">
+            <label class="col-md-5 col-form-label text-md-end">登録申請者氏名<span class="col-form-mark">必須</span></label>
+            <div class="col-md-7">
               <input v-model="form.sinsei_name" :class="{ 'is-invalid': form.errors.has('sinsei_name') }" class="form-control" type="text" name="sinsei_name">
               <has-error :form="form" field="sinsei_name" />
             </div>
@@ -14,8 +14,8 @@
 
           <!-- sinsei_email -->
           <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-end">登録申請者メールアドレス</label>
-            <div class="col-md-8">
+            <label class="col-md-5 col-form-label text-md-end">登録申請者メールアドレス<span class="col-form-mark">必須</span></label>
+            <div class="col-md-7">
               <input v-model="form.sinsei_email" :class="{ 'is-invalid': form.errors.has('sinsei_email') }" class="form-control" type="email" name="sinsei_email">
               <has-error :form="form" field="sinsei_email" />
             </div>
@@ -23,8 +23,8 @@
 
           <!-- introducer_type -->
           <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-end"></label>
-            <div class="col-md-8">
+            <label class="col-md-5 col-form-label text-md-end"></label>
+            <div class="col-md-7">
               <b-form-radio-group
                 id="radiobox-group-introducer_type"
                 v-model="form.introducer_type"
@@ -37,8 +37,8 @@
 
           <!-- syoukai_id -->
           <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-end">紹介取次店ID</label>
-            <div class="col-md-8">
+            <label class="col-md-5 col-form-label text-md-end">紹介取次店ID<span class="col-form-mark">必須</span></label>
+            <div class="col-md-7">
               <input v-model="form.syoukai_id" :class="{ 'is-invalid': form.errors.has('syoukai_id') }" class="form-control" type="text" name="syoukai_id">
               <has-error :form="form" field="syoukai_id" />
             </div>
@@ -46,8 +46,8 @@
 
           <!-- syoukai_name -->
           <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-end">紹介取次店名</label>
-            <div class="col-md-8">
+            <label class="col-md-5 col-form-label text-md-end">紹介取次店名<span class="col-form-mark">必須</span></label>
+            <div class="col-md-7">
               <input v-model="form.syoukai_name" :class="{ 'is-invalid': form.errors.has('syoukai_name') }" class="form-control" type="text" name="syoukai_name">
               <has-error :form="form" field="syoukai_name" />
             </div>
@@ -56,8 +56,8 @@
           <template v-if="form.introducer_type == 'AGENCY'">
             <!-- eva_id -->
             <div class="mb-3 row">
-              <label class="col-md-4 col-form-label text-md-end">エバンジェリストID</label>
-              <div class="col-md-8">
+              <label class="col-md-5 col-form-label text-md-end">エバンジェリストID</label>
+              <div class="col-md-7">
                 <input v-model="form.eva_id" :class="{ 'is-invalid': form.errors.has('eva_id') }" class="form-control" type="text" name="eva_id">
                 <has-error :form="form" field="eva_id" />
               </div>
@@ -65,8 +65,8 @@
 
             <!-- eva_name -->
             <div class="mb-3 row">
-              <label class="col-md-4 col-form-label text-md-end">エバンジェリスト名</label>
-              <div class="col-md-8">
+              <label class="col-md-5 col-form-label text-md-end">エバンジェリスト名</label>
+              <div class="col-md-7">
                 <input v-model="form.eva_name" :class="{ 'is-invalid': form.errors.has('eva_name') }" class="form-control" type="text" name="eva_name">
                 <has-error :form="form" field="eva_name" />
               </div>
@@ -75,9 +75,10 @@
 
           <!-- nth_type -->
           <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-end">この登録申請者は紹介者（あなた）の</label>
-            <div class="col-md-8">
+            <label class="col-md-5 col-form-label text-md-end">この登録申請者は紹介者（あなた）の<span class="col-form-mark">必須</span></label>
+            <div class="col-md-7">
               <b-form-radio-group
+                @change="changeNthType"
                 id="radiobox-group-nth_type"
                 v-model="form.nth_type"
                 class="mt-2"
@@ -90,8 +91,8 @@
 
           <!-- isd_type -->
           <div class="mb-3 row">
-            <label class="col-md-4 col-form-label text-md-end">直上者指定</label>
-            <div class="col-md-8">
+            <label class="col-md-5 col-form-label text-md-end">直上者指定<span class="col-form-mark">必須</span></label>
+            <div class="col-md-7">
               <b-form-radio-group
                 @change="changeIdsType"
                 id="radiobox-group-isd_type"
@@ -107,8 +108,8 @@
           <template v-if="form.isd_type == 'DESIGNATE'">
             <!-- isd_id -->
             <div class="mb-3 row">
-              <label class="col-md-4 col-form-label text-md-end">直上者ID</label>
-              <div class="col-md-8">
+              <label class="col-md-5 col-form-label text-md-end">直上者ID<span class="col-form-mark">必須</span></label>
+              <div class="col-md-7">
                 <input v-model="form.isd_id" :class="{ 'is-invalid': form.errors.has('isd_id') }" class="form-control" type="text" name="name">
                 <has-error :form="form" field="isd_id" />
               </div>
@@ -116,16 +117,38 @@
 
             <!-- isd_name -->
             <div class="mb-3 row">
-              <label class="col-md-4 col-form-label text-md-end">直上者名</label>
-              <div class="col-md-8">
+              <label class="col-md-5 col-form-label text-md-end">直上者名<span class="col-form-mark">必須</span></label>
+              <div class="col-md-7">
                 <input v-model="form.isd_name" :class="{ 'is-invalid': form.errors.has('isd_name') }" class="form-control" type="text" name="name">
                 <has-error :form="form" field="isd_name" />
               </div>
             </div>
           </template>
+          
+          <!-- weg_type -->
+          <div class="mb-3 row">
+            <label class="col-md-5 col-form-label text-md-left">電解水生成器の取り付けについて<span class="col-form-mark">必須</span></label>
+            <div class="col-md-7">
+              <b-form-select 
+                id="radiobox-group-weg_type"
+                v-model="form.weg_type"
+                :options="weg_type_options"
+                :class="{ 'is-invalid': form.errors.has('weg_type') }"></b-form-select>
+              <has-error :form="form" field="weg_type" />
+            </div>
+          </div>
+          
+          <!-- note -->
+          <div class="mb-3 row">
+            <label class="col-md-5 col-form-label text-md-end">備考（通信欄）</label>
+            <div class="col-md-7">
+              <textarea v-model="form.note" :class="{ 'is-invalid': form.errors.has('note') }" rows="3" max-rows="6" class="form-control"  name="note"></textarea>
+              <has-error :form="form" field="note" />
+            </div>
+          </div>
 
           <div class="mt-5 row">
-            <div class="col-md-8 offset-md-4 text-center text-md-left">
+            <div class="col-md-7 offset-md-5 text-center text-md-left">
               <!-- Submit Button -->
               <v-button :loading="form.busy">送信</v-button>
             </div>
@@ -150,12 +173,17 @@ export default {
   },
   
   created () {
-    this.introducer_type_options = window.config.IntroducerType
-    this.nth_type_options = window.config.NthType
-    this.isd_type_options = window.config.ISDType
+    this.introducer_type_options = this.dicToArray(window.config.IntroducerType)
+    this.nth_type_options = this.dicToArray(window.config.NthType)
+    this.isd_type_options = this.dicToArray(window.config.ISDType)
+    this.weg_type_options = this.dicToArray(window.config.WEGType)
     this.form.introducer_type = 'AGENCY'
     this.form.nth_type = 'FIRST'
     this.form.isd_type = 'AUTOMATIC'
+    this.form.weg_type = 'ATTACHABLE'
+    this.changeNthType()
+
+    console.log('---------weg_type_options--------', this.weg_type_options)
   },
 
   data: () => ({
@@ -176,6 +204,7 @@ export default {
     isd_type_options: [],
     nth_type_options: [],
     user_type_options: [],
+    weg_type_options: [],
   }),
 
   methods: {
@@ -197,10 +226,31 @@ export default {
       }
     },
     changeIdsType() {
-      if(this.form.isd_type != 'DESIGNATE') {
+      if(this.form.isd_type == 'AUTOMATIC') {
         this.form.isd_id = null
         this.form.isd_name = null
       }
+    },
+    changeNthType() {
+      if(this.form.nth_type == 'FIRST') {
+        this.form.isd_type = 'AUTOMATIC'
+        this.isd_type_options.filter(x => x.value != 'AUTOMATIC').map((x) => { x.disabled = true; return x;})
+        this.changeIdsType()  
+      } else {
+        this.isd_type_options.filter(x => x.value != 'AUTOMATIC').map((x) => { x.disabled = false; return x;})
+      }
+    },
+    dicToArray(dic) {
+      var result = []
+      Object.keys(dic).forEach(function(key) {
+        var obj = {
+          value: key,
+          text: dic[key],
+          disabled: false
+        }
+        result.push(obj)
+      });
+      return result
     }
   }
 }

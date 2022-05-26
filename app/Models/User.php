@@ -104,7 +104,7 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
     {
         return $value ?
             config('app.url') . '/' . $value :
-            config('app.url') . '/' . config('values.profile_upload_path') . '/none.jpg';
+            config('app.url') . '/' . config('filesystems.profile_upload_path') . '/none.jpg';
     }
 
     public function setImageAttribute($value)
@@ -114,7 +114,7 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
         // or use your own disk, defined in config/filesystems.php
         $disk = config('backpack.base.root_disk_name');
         // destination path relative to the disk above
-        $destination_path = 'public/' . config('values.profile_upload_path');
+        $destination_path = 'public/' . config('filesystems.profile_upload_path');
 
         // if the image was erased
         if ($value==null) {

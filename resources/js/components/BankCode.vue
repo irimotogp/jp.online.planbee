@@ -1,9 +1,10 @@
 <template>
   <div>
     <div class="mb-3 row">
-      <label class="col-md-4 col-form-label text-md-right">銀行</label>
+      <div class="col-md-4"><label class="col-form-label text-md-right">銀行<span class="col-form-mark">必須</span></label></div>
       <div class="col-md-8">
         <v-select
+          :disabled="disabled"
           name="bank"
           v-model="bank"
           :options="bank_options"
@@ -16,9 +17,10 @@
     </div>
     
     <div class="mb-3 row">
-      <label class="col-md-4 col-form-label text-md-right">支店</label>
+      <div class="col-md-4"><label class="col-form-label text-md-right">支店<span class="col-form-mark">必須</span></label></div>
       <div class="col-md-8">
         <v-select
+          :disabled="disabled"
           name="branch"
           v-model="branch"
           @input="changeBranch"
@@ -51,21 +53,20 @@ export default {
       }
       this.$emit("updateBank", value)
     },
-
   },
   created () {
     var obj = this
     fetch("https://zengin-code.github.io/api/banks.json")
     .then(response => response.json())
     .then(data => {
-      obj.bank_options = Object.values(data).map((x) => { x.label = x.code + "　" + x.name; return x; })
+      obj.bank_options = Object.values(data).map((x) => { x.name = this.hankaku2Zenkaku(x.name); x.label = x.code + "　" + x.name; return x; })
       if(obj.form.bank) {
         obj.bank = obj.form.bank
         this.fetchBranch(obj.bank)
       }
     });
   },
-  props: [ 'form', 'update' ],
+  props: [ 'form', 'update', 'disabled' ],
   data () {
     return {
       bank_options: [],
@@ -83,7 +84,7 @@ export default {
       fetch(`https://zengin-code.github.io/api/branches/${value.code}.json`)
       .then(response => response.json())
       .then(data => {
-        obj.branch_options = Object.values(data).map((x) => { x.label = x.code + "　" + x.name; return x; })
+        obj.branch_options = Object.values(data).map((x) => { x.name = this.hankaku2Zenkaku(x.name); x.label = x.code + "　" + x.name; return x; })
         const option = obj.form.branch ? obj.branch_options.find(x => x.code == obj.form.branch.code) : null
         if(option) {
           obj.branch = obj.form.branch
@@ -92,7 +93,13 @@ export default {
           this.$emit("updateBranch", null)
         }
       });
+    },
+    hankaku2Zenkaku(str) {
+        return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+            return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+        });
     }
+
   }
 }
 </script>

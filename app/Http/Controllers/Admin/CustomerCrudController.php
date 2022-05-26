@@ -34,6 +34,7 @@ class CustomerCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/customer');
         CRUD::setEntityNameStrings('', 'オンラインレンタル申し込み');
         $this->crud->denyAccess(['show', 'create', 'delete', 'update']);
+        $this->crud->enableExportButtons();
     }
 
     /**
@@ -65,28 +66,7 @@ class CustomerCrudController extends CrudController
         $this->crud->addColumn([
             'label'     => '会員名漢字',
             'type'      => 'text',
-            'name'      => 'kanji_sei'
-        ]);
-        $this->crud->addColumn([
-            'label'     => '会員名漢字',
-            'type'      => 'text',
-            'name'      => 'kanji_mei'
-        ]);
-        $this->crud->addColumn([
-            'label'     => '会員名漢字',
-            'type'      => 'text',
             'name'      => 'kanji'
-        ]);
-
-        $this->crud->addColumn([
-            'label'     => '会員名ｶﾅ',
-            'type'      => 'text',
-            'name'      => 'kata_sei'
-        ]);
-        $this->crud->addColumn([
-            'label'     => '会員名ｶﾅ',
-            'type'      => 'text',
-            'name'      => 'kata_mei'
         ]);
         $this->crud->addColumn([
             'label'     => '会員名ｶﾅ',
@@ -94,12 +74,9 @@ class CustomerCrudController extends CrudController
             'name'      => 'kata'
         ]);
         $this->crud->addColumn([
-            'label'     => 'ﾆｯｸﾈｰﾑ',
-            'type'      => 'text',
-        ]);
-        $this->crud->addColumn([
             'label'     => '表示区分',
             'type'      => 'text',
+            'name'      => 'display_type'
         ]);
 
         $this->crud->addColumn([
@@ -159,7 +136,7 @@ class CustomerCrudController extends CrudController
         $this->crud->addColumn([
             'label'     => 'ﾒｰﾙPC',
             'type'      => 'text',
-            'name'      => 'pc_email'
+            'name'      => 'sinsei_email'
         ]);
         $this->crud->addColumn([
             'label'     => 'ﾒｰﾙ携帯',
@@ -179,7 +156,7 @@ class CustomerCrudController extends CrudController
             'type'      => 'text',
             'name'      => 'work_place_name'
         ]);
-        
+
         $this->crud->addColumn([
             'label' => '発送先指定',
             'type' => 'select_from_array',
@@ -212,22 +189,37 @@ class CustomerCrudController extends CrudController
             'type'      => 'text',
             'name'      => 'receiver_phone'
         ]);
+        $this->crud->addColumn([
+            'label'     => 'H携帯番号',
+            'type'      => 'text',
+        ]);
 
         $this->crud->addColumn([
             'label'     => 'ｶｰﾄﾞ会社',
             'type'      => 'text',
+            'name'      => 'receiver_phone'
+        ]);
+
+        $this->crud->addColumn([
+            'label' => 'ｶｰﾄﾞ会社',
+            'type' => 'select_from_array',
+            'name' => 'card_company_type',
+            'options' => \App\Enums\CardCompanyType::getAllValues(),
         ]);
         $this->crud->addColumn([
             'label'     => 'ｶｰﾄﾞ番号',
             'type'      => 'text',
+            'name'      => 'card_number'
         ]);
         $this->crud->addColumn([
             'label'     => 'ｶｰﾄﾞ名義',
             'type'      => 'text',
+            'name'      => 'card_name'
         ]);
         $this->crud->addColumn([
             'label'     => '有効期限',
             'type'      => 'text',
+            'name'      => 'expiration_date'
         ]);
         $this->crud->addColumn([
             'label'     => '会員区分',
@@ -240,14 +232,20 @@ class CustomerCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'label'     => '紹介取次店ID',
+            'label'     => '紹介者ID',
             'type'      => 'text',
-            'name'      => 'syoukai_id_text'
         ]);
         $this->crud->addColumn([
-            'label'     => '紹介取次店名',
+            'label'     => '紹介者名',
             'type'      => 'text',
-            'name'      => 'syoukai_name_text'
+        ]);
+        $this->crud->addColumn([
+            'label'     => 'SUｻﾎﾟｰﾀｰID',
+            'type'      => 'text',
+        ]);
+        $this->crud->addColumn([
+            'label'     => 'SUｻﾎﾟｰﾀｰ名',
+            'type'      => 'text',
         ]);
         $this->crud->addColumn([
             'label'     => '直上者ID',
@@ -259,9 +257,11 @@ class CustomerCrudController extends CrudController
             'type'      => 'text',
             'name'      => 'isd_name_text'
         ]);
+
         $this->crud->addColumn([
             'label'     => 'ﾗｲﾝ',
             'type'      => 'text',
+            'name'      => 'line_text'
         ]);
         $this->crud->addColumn([
             'label'     => '位置指定',
@@ -302,15 +302,17 @@ class CustomerCrudController extends CrudController
 
         $this->crud->addColumn([
             'label' => '購入ｺｰｽ',
-            'type' => 'select_from_array',
-            'name' => 'contract_type',
-            'options' => \App\Enums\ContractType::getAllValues(),
+            'type' => 'select',
+            'name' => 'product_id',
+            'attribute' => 'contract_type_text',
+            'entity' => 'product',
+            'model' => "App\Models\Product",
         ]);
         $this->crud->addColumn([
             'label'     => '継続入金法',
             'type'      => 'text',
+            'name'      => 'continue_payment_law_text'
         ]);
-
         $this->crud->addColumn([
             'label'     => 'BN相殺',
             'type'      => 'text',
@@ -319,13 +321,14 @@ class CustomerCrudController extends CrudController
             'label' => '購入商品1',
             'type' => 'select',
             'name' => 'product_id',
-            'attribute' => 'code',
+            'attribute' => 'display_name',
             'entity' => 'product',
             'model' => "App\Models\Product",
         ]);
         $this->crud->addColumn([
             'label'     => '購入個数1',
             'type'      => 'text',
+            'name'      => 'product_buy_num_text'
         ]);
         $this->crud->addColumn([
             'label'     => '購入商品2',
@@ -410,6 +413,7 @@ class CustomerCrudController extends CrudController
         $this->crud->addColumn([
             'label'     => '名義ｶﾅ',
             'type'      => 'text',
+            'name'      => 'account_number'
         ]);
         $this->crud->addColumn([
             'label'     => '名義漢字',
@@ -444,10 +448,6 @@ class CustomerCrudController extends CrudController
             'type'      => 'text',
         ]);
         $this->crud->addColumn([
-            'label'     => '住所2',
-            'type'      => 'text',
-        ]);
-        $this->crud->addColumn([
             'label' => "本人確認書類",
             'name' => "identity_doc",
             'type' => 'image',
@@ -457,7 +457,6 @@ class CustomerCrudController extends CrudController
             'name' => "identity_doc2",
             'type' => 'image',
         ]);
-
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -475,44 +474,6 @@ class CustomerCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(CustomerRequest::class);
-
-        CRUD::field('id');
-        CRUD::field('introducer_id');
-        CRUD::field('kanji_sei');
-        CRUD::field('kanji_mei');
-        CRUD::field('kata_sei');
-        CRUD::field('kata_mei');
-        CRUD::field('sex_type');
-        CRUD::field('birthday');
-        CRUD::field('zip1');
-        CRUD::field('pref1');
-        CRUD::field('city1');
-        CRUD::field('addr1');
-        CRUD::field('home_phone');
-        CRUD::field('fax');
-        CRUD::field('mobile_phone');
-        CRUD::field('mobile_phone2');
-        CRUD::field('pc_email');
-        CRUD::field('phone_email');
-        CRUD::field('work_place_name');
-        CRUD::field('shipping_address_id');
-        CRUD::field('zip2');
-        CRUD::field('pref2');
-        CRUD::field('city2');
-        CRUD::field('addr2');
-        CRUD::field('receiver_name');
-        CRUD::field('receiver_phone');
-        CRUD::field('contract_type');
-        CRUD::field('product_id');
-        CRUD::field('bank_name');
-        CRUD::field('bank_code');
-        CRUD::field('branch_name');
-        CRUD::field('branch_code');
-        CRUD::field('deposit_id');
-        CRUD::field('account_number');
-        CRUD::field('identity_doc');
-        CRUD::field('identity_doc2');
-
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');

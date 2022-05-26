@@ -1,17 +1,18 @@
 <template>
   <div>
     <div class="mb-3 row">
-      <label class="col-md-4 col-form-label text-md-right">郵便番号</label>
+      <div class="col-md-4"><label class="col-form-label text-md-right">郵便番号<span class="col-form-mark">必須</span></label></div>
       <div class="col-md-5">
-        <input @change="search" v-model="data.zip" :class="{ 'is-invalid': form.errors.has(zip_t) }" class="form-control" type="text" :name="zip_t" :id="zip_t">
+        <input :disabled="disabled" @change="search" v-model="data.zip" :class="{ 'is-invalid': form.errors.has(zip_t) }" class="form-control" type="text" :name="zip_t" :id="zip_t">
         <has-error :form="form" :field="zip_t" />
       </div>
     </div>
 
     <div class="mb-3 row">
-      <label class="col-md-4 col-form-label text-md-right">都道府県</label>
+      <div class="col-md-4"><label class="col-form-label text-md-right">都道府県<span class="col-form-mark">必須</span></label></div>
       <div class="col-md-5">
         <b-form-select 
+          :disabled="disabled"
           @change="change"
           v-model="data.pref"
           :options="pref_options"
@@ -23,16 +24,16 @@
     </div>
 
     <div class="mb-3 row">
-      <label class="col-md-4 col-form-label text-md-right">住所１（番地まで）</label>
+      <div class="col-md-4"><label class="col-form-label text-md-right">住所１（番地まで）<span class="col-form-mark">必須</span></label></div>
       <div class="col-md-8">
-        <input @change="change" v-model="data.city" :class="{ 'is-invalid': form.errors.has(city_t) }" class="form-control" type="text" :name="city_t" :id="city_t">
+        <input :disabled="disabled" @change="change" v-model="data.city" :class="{ 'is-invalid': form.errors.has(city_t) }" class="form-control" type="text" :name="city_t" :id="city_t">
         <has-error :form="form" :field="city_t" />
       </div>
     </div>
     <div class="mb-3 row">
-      <label class="col-md-4 col-form-label text-md-right">住所２（マンション名・号室）</label>
+      <div class="col-md-4"><label class="col-form-label text-md-right">住所２（マンション名・号室）</label></div>
       <div class="col-md-8">
-        <input @change="change" v-model="data.addr" :class="{ 'is-invalid': form.errors.has(addr_t) }" class="form-control" type="text" :name="addr_t" :id="addr_t">
+        <input :disabled="disabled" @change="change" v-model="data.addr" :class="{ 'is-invalid': form.errors.has(addr_t) }" class="form-control" type="text" :name="addr_t" :id="addr_t">
         <has-error :form="form" :field="addr_t" />
       </div>
     </div>
@@ -48,7 +49,7 @@ export default {
     this.data.city = this.form[this.city_t]
     this.data.addr = this.form[this.addr_t]
   },
-  props: [ 'zip_t', 'pref_t', 'city_t', 'addr_t', 'form', 'update', 'pref_options' ],
+  props: [ 'zip_t', 'pref_t', 'city_t', 'addr_t', 'form', 'update', 'pref_options', 'disabled' ],
   data () {
     return {
       data: {
@@ -74,13 +75,11 @@ export default {
           if( da.zip.length == 1 ){
             obj.data.zip = code
             obj.data.pref = pref
-            obj.data.city = city
-            obj.data.addr = area
+            obj.data.city = city + area
           }
           else{
             obj.data.pref = pref
-            obj.data.city = city
-            obj.data.addr = area
+            obj.data.city = city + area
           }	
           obj.change()
         }

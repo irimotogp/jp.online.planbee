@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Enums\IntroducerType;
 use App\Enums\NthType;
 use App\Enums\ISDType;
+use App\Enums\WEGType;
 
 class IntroducerRequest extends FormRequest
 {
@@ -30,14 +31,16 @@ class IntroducerRequest extends FormRequest
             'sinsei_name' => 'required|max:255',
             'sinsei_email' => 'required|email:filter|max:255',
             'introducer_type' => 'required|in:' . implode(",", IntroducerType::ALL_OPTIONS),
-            'syoukai_id' => 'required',
+            'syoukai_id' => 'required|numeric|digits:10',
             'syoukai_name' => 'required',
-            'eva_id' => 'required_if:introducer_type,' . IntroducerType::AGENCY,
-            'eva_name' => 'required_if:introducer_type,' . IntroducerType::AGENCY,
+            'eva_id' => 'nullable|numeric|digits:10',
+            'eva_name' => '',
             'nth_type' => 'required|in:' . implode(",", NthType::ALL_OPTIONS),
             'isd_type' => 'required|in:' . implode(",", ISDType::ALL_OPTIONS),
             'isd_id' => 'required_if:isd_type,' . ISDType::DESIGNATE,
             'isd_name' => 'required_if:isd_type,' . ISDType::DESIGNATE,
+            'weg_type' => 'required|in:' . implode(",", WEGType::ALL_OPTIONS),
+            'note' => ''
         ];
     }
 
@@ -60,6 +63,8 @@ class IntroducerRequest extends FormRequest
             'isd_type' => '直上者指定',
             'isd_id' => '直上者ID',
             'isd_name' => '直上者名',
+            'weg_type' => '電解水生成器',
+            'note' => '備考（通信欄）'
         ];
     }
 
@@ -74,7 +79,7 @@ class IntroducerRequest extends FormRequest
             'type.required' => '必ず選択してください。',
             'nth.required' => '必ず選択してください。',
             'isd.required' => '必ず選択してください。',
-            'eva_id.required_if' => 'エバンジェリストIDを指定してください。',
+            'eva_id.required' => 'エバンジェリストIDを指定してください。',
             'eva_name.required_if' => 'エバンジェリストIDを指定してください。',
             'isd_id.required_if' => '直上者IDを指定してください。',
             'isd_name.required_if' => '直上者名を指定してください。',

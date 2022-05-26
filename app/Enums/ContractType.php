@@ -27,8 +27,16 @@ final class ContractType extends Enum
     public static function getAllValues()
     {
         return [
-            self::NORMAL     => __("通常"),
-            self::BULK   => __("一括オプション"),
+            self::NORMAL     => __("通常レンタルプラン（月額払い）"),
+            self::BULK   => __("一括オプション（3年分一括前払い）"),
+        ];
+    }
+
+    public static function getPurchaseOptions()
+    {
+        return [
+            self::NORMAL     => __("レンタル"),
+            self::BULK   => __("一括"),
         ];
     }
 }

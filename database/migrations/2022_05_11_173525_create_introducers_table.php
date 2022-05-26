@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use App\Enums\IntroducerType;
 use App\Enums\NthType;
 use App\Enums\ISDType;
+use App\Enums\WEGType;
 
 class CreateIntroducersTable extends Migration
 {
@@ -29,6 +30,8 @@ class CreateIntroducersTable extends Migration
             $table->enum('isd_type', ISDType::ALL_OPTIONS)->nullable()->commet('直上者指定');
             $table->string('isd_id')->nullable()->commet('直上者ID');
             $table->string('isd_name')->nullable()->commet('直上者名');
+            $table->enum('weg_type', WEGType::ALL_OPTIONS)->nullable()->commet('電解水生成器');
+            $table->text('note')->nullable()->commet('備考');
             $table->string('uuid')->nullable()->comment('UUID');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();

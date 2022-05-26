@@ -28,6 +28,8 @@ class Introducer extends Model
         'isd_type',
         'isd_id',
         'isd_name',
+        'weg_type',
+        'note',
         'uuid',
         'created_at'
     ];
