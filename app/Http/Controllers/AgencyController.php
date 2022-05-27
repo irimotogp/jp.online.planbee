@@ -80,10 +80,10 @@ class AgencyController extends Controller
             ->where('uuid', $request->input('uuid'))
             ->first();
         $data = $request->input();
-        $data['mobile_phone'] = dataToPhoneType($data['mobile_phone']);
-        $data['mobile_phone2'] = dataToPhoneType($data['mobile_phone2']);
-        $data['pref1'] = $data['pref1'] ? getTextOfProf($data['pref1']) : null;
-        $data['pref2'] = $data['pref2'] ? getTextOfProf($data['pref2']) : null;
+        $data['mobile_phone'] = isset($data['mobile_phone']) ? dataToPhoneType($data['mobile_phone']) : null;
+        $data['mobile_phone2'] = isset($data['mobile_phone2']) ? dataToPhoneType($data['mobile_phone2']) : null;
+        $data['pref1'] = isset($data['pref1']) ? getTextOfProf($data['pref1']) : null;
+        $data['pref2'] = isset($data['pref2']) ? getTextOfProf($data['pref2']) : null;
         $data['introducer_id'] = $introducer->id;
         $agency = Agency::create($data);
         
