@@ -32,6 +32,14 @@ class ProductOption extends Model
     public function product_fields() {
         return $this->belongsToMany(ProductField::class, 'product_field_options');
     }
+    
+    public function agencies() {
+        return $this->belongsToMany(Agency::class, 'agency_product_options');
+    }
+    
+    public function customers() {
+        return $this->belongsToMany(Customer::class, 'customer_product_options');
+    }
 
     public function getNamePriceAttribute() {
         return $this->price > 0 ? 

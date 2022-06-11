@@ -69,7 +69,7 @@ class ProductCrudController extends CrudController
             'name'      => 'cashback_text', 
         ]);
         $this->crud->addColumn([
-            'label' => '店舗タイプ',
+            'label' => 'カテゴリー',
             'type' => 'select_from_array',
             'name' => 'introducer_type',
             'options' => \App\Enums\IntroducerType::getAllValues(),
@@ -132,7 +132,7 @@ class ProductCrudController extends CrudController
             'name'      => 'cashback', 
         ]);
         $this->crud->addField([
-            'label' => '店舗タイプ',
+            'label' => 'カテゴリー',
             'type' => 'select_from_array',
             'name' => 'introducer_type',
             'options' => \App\Enums\IntroducerType::getAllValues(),

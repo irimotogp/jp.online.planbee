@@ -5,18 +5,18 @@
         {{ appName }}
       </a>
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
+      <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
         <span class="navbar-toggler-icon" />
       </button>
 
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto">
-          <!-- <locale-dropdown /> -->
-          <!-- <li class="nav-item">
+          <locale-dropdown />
+          <li class="nav-item">
             <a class="nav-link" href="#">Link</a>
-          </li> -->
+          </li>
         </ul>
-      </div>
+      </div> -->
     </div>
   </nav>
 </template>

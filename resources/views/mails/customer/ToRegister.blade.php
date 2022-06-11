@@ -1,36 +1,28 @@
 @component('mail::message')
-{{ $data->introducer->sinsei_name }}様
+{{ $data->name }}様
 
-この度は、プランビーのレンタルお申し込みをいただき誠にありがとうございます。
-※  重要事項の記載がございますので、このメールは必ず保存してください。
-
-＜今後の流れについて＞
-1.　契約内容確認のお電話
-ご指定の時間帯に弊社からお電話いたします。
-
-2.　初期費用のお支払い
-■クレジットカード決済の場合：お電話終了後に決済いたします。
-決済日の指定がありましたらお電話の際にお申し付けください。
-
-■銀行振込の場合：下記振込先までお振り込みください。
-【振込先】http://bit.ly/1M7qSZK
-
-3．月額料の口座振替払いを選択された方
-「口座振替依頼書」を郵送いたしますので、記入・捺印後にご返信ください。
-
-以上が完了しましたら、ご登録・商品発送となります。
-本メールの内容や契約内容についてご不明な点は、お気軽にお問い合わせください。
-
-【電話】050-1745-9000（平日10～17時）
-【メール】info@planbee.co.jp
-【LINE】個別のお問い合わせにも対応しています。
-ともだち追加はこちらから  https://lin.ee/PpW6y3G
-
-【会社情報】
-株式会社プランビー
-代表取締役　井利元　聖史
-〒940-2039　新潟県長岡市関原南2-4077-1
-
+この度は、プランビーのレンタルお申し込みをいただき誠にありがとうございます。  
+※  重要事項の記載がございますので、このメールは必ず保存してください。  
+＜今後の流れについて＞ 
+1.　契約内容確認のお電話 
+ご指定の時間帯に弊社からお電話いたします。 
+2.　初期費用のお支払い  
+■クレジットカード決済の場合：お電話終了後に決済いたします。  
+決済日の指定がありましたらお電話の際にお申し付けください。 
+■銀行振込の場合：下記振込先までお振り込みください。  
+【振込先】http://bit.ly/1M7qSZK  
+3．月額料の口座振替払いを選択された方 
+「口座振替依頼書」を郵送いたしますので、記入・捺印後にご返信ください。 
+以上が完了しましたら、ご登録・商品発送となります。 
+本メールの内容や契約内容についてご不明な点は、お気軽にお問い合わせください。  
+【電話】050-1745-9000（平日10～17時） 
+【メール】info@planbee.co.jp 
+【LINE】個別のお問い合わせにも対応しています。 
+ともだち追加はこちらから  https://lin.ee/PpW6y3G  
+【会社情報】  
+株式会社プランビー 
+代表取締役　井利元　聖史  
+〒940-2039　新潟県長岡市関原南2-4077-1 
 以下、ご入力いただいた申請内容です。
 =====================================================
 性別：　{{ \App\Enums\SexType::getAllValues()[$data->sex_type] }}<br>
@@ -77,6 +69,7 @@ FAX番号：　{{ $data->fax }}<br>
 @endif
 月額料支払方法：　{{ \App\Enums\MonthlyPaymentType::getAllValues()[$data->monthly_payment_type] }}<br>
 契約商品：　{{ $data->product->display_name }}<br>
+@if($data->product_id && $data->product->cashback == 1)
 銀行名：　{{ $data->bank_name }}<br>
 銀行コード：　{{ $data->bank_code }}<br>
 支店名：　{{ $data->branch_name }}<br>
@@ -84,6 +77,7 @@ FAX番号：　{{ $data->fax }}<br>
 預金種目：　{{ $data->deposit->name }}<br>
 口座番号：　{{ $data->account_number }}<br>
 口座名義（ｶﾅ）：　{{ $data->account_name }}<br>
+@endif
 @if($data->identity_doc)
 本人確認書類：　{{ $data->identity_doc_url }}<br>
 @endif
@@ -96,13 +90,15 @@ FAX番号：　{{ $data->fax }}<br>
 @if($data->desire_datetime_type == \App\Enums\DesireDateTimeType::SPECIAL)
 {{ $data->desire_date }} {{ $data->desire_start_h }}時{{ $data->desire_start_m }}分～{{ $data->desire_end_h }}時{{ $data->desire_end_m }}分<br>
 @endif
-@if($data->product_option_id)
-商品オプション：　{{ $data->product_option->name_price}}<br>
+@if($data->product_options)
+商品オプション：<br>
+@foreach($data->product_options as $product_option)
+・{{ $product_option->name_price }}<br>
+@endforeach
 @endif
 基本取付工賃：　{{ \App\Enums\BasicFeeType::getAllValues()[$data->basic_fee_type] }}<br>
 初期費用合計金額：　{{ $data->initial_price }}<br>
 月額料：　{{ $data->month_price }}<br>
-基本取付工賃：　{{ \App\Enums\CommercialPrivacyType::getAllValues()[$data->commercial_privacy_type] }}<br>
 備考（通信欄）：　{{ $data->note }}
 =====================================================
 @endcomponent

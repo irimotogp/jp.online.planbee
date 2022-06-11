@@ -1,6 +1,6 @@
 <template>
     <div class="mb-3 row">
-      <label class="col-md-4 col-form-label text-md-right">{{ label }}</label>
+      <label class="col-md-4 col-form-label text-md-right">{{ label }}<span v-if="need" class="col-form-mark">必須</span></label>
       <div class="col-md-8">
         <div :class="{ 'is-invalid': form.errors.has(name) }" class="mt-2">
           <input :disabled="disabled" ref="file" type="file" v-on:change="onFileChange" :name="name" accept="image/jpg, image/jpeg, image/png, .heic, .heif" class="form-control-file">
@@ -17,7 +17,7 @@
 </style>
 <script>
     export default{
-        props: [ 'form', 'name', 'label', 'disabled' ],
+        props: [ 'form', 'name', 'label', 'disabled', 'need' ],
         created() {
           var image = this.form[this.name]
           if(image) {

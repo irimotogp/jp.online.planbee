@@ -30,8 +30,8 @@ final class IntroducerType extends Enum
     public static function getAllValues()
     {
         return [
-            self::AGENCY     => __("取次店"),
-            self::CUSTOMER   => __("カスタマー"),
+            self::AGENCY     => __("取次店専用"),
+            self::CUSTOMER   => __("カスタマー専用"),
             self::ALL => __('共用')
         ];
     }

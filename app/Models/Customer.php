@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
+use App\Enums\SexType;
+use App\Enums\DesireContacType;
+use App\Enums\DesireDateTimeType;
+use App\Enums\BasicFeeType;
+
 class Customer extends Model
 {
     use \Backpack\CRUD\app\Models\Traits\CrudTrait;
@@ -53,8 +58,6 @@ class Customer extends Model
 
         'syoukai_id',
         'syoukai_name',
-        'eva_id',
-        'eva_name',
 
         'shipping_address_type',
 
@@ -103,12 +106,11 @@ class Customer extends Model
         'initial_price',
         'month_price',
 
-        'commercial_privacy_type',
-
         'note'
     ];
     
     protected $appends = [
+        'name',
         'kanji',
         'kata',
         'display_type',
@@ -120,6 +122,7 @@ class Customer extends Model
         'product_buy_num_text',
         'identity_doc_url',
         'identity_doc2_url',
+        'custom_note'
     ];
     
     public function introducer() {
@@ -133,13 +136,22 @@ class Customer extends Model
     public function product() {
         return $this->belongsTo(Product::class);
     }
-    
-    public function product_option() {
-        return $this->belongsTo(ProductOption::class);
+
+    public function product_options() {
+        return $this->belongsToMany(ProductOption::class, 'customer_product_options');
     }
     
     public function shipping_address() {
         return $this->belongsTo(ShippingAddress::class);
+    }
+    
+    public function getNameAttribute() {
+        if($this->sex_type != SexType::CORPORATION) {
+            return $this->kanji_sei . " " .  $this->kanji_mei . "（" . $this->kata_sei . " " .  $this->kata_mei . "）";
+        } else {
+            return $this->corp_kanji . "（" . $this->corp_kanji  . "）" . " " .  
+                $this->rep_kanji_sei . " " .  $this->rep_kanji_mei . "（" . $this->rep_kata_sei . " " .  $this->rep_kata_mei . "）";
+        }
     }
     
     public function getKanjiAttribute() {
@@ -148,6 +160,34 @@ class Customer extends Model
     
     public function getKataAttribute() {
         return $this->kata_sei . " " .  $this->kata_mei;
+    }
+
+    public function getCustomNoteAttribute() {
+        $text = "希望登録月: {$this->desire_month}月";
+        if($this->desire_contact_type) {
+            $desire_contact_type_text = DesireContacType::getAllValues()[$this->desire_contact_type];
+            $text .= "<br>本人確認の希望連絡先: {$desire_contact_type_text}";
+        }
+        if($this->desire_datetime_type == DesireDateTimeType::ALL) {
+            $desire_datetime_type_text = DesireDateTimeType::getAllValues()[$this->desire_datetime_type];
+            $text .= "<br>希望日時: {$desire_datetime_type_text}";
+        } else {
+            $desire_date = date('Y年m月d日', strtotime($this->desire_date));
+            $text .= "<br>希望日時: {$desire_date} {$this->desire_start_h}時{$this->desire_start_m}分" . " ~ " . 
+                "{$this->desire_end_h}時{$this->desire_end_m}分";
+        }
+        if(count($this->product_options) > 0) {
+            $text .="<br>オプション品: <br>・";
+            $text .= $this->product_options->implode('name_price', '<br>・');
+        }
+        if($this->basic_fee_type) {
+            $basic_fee_type = BasicFeeType::getAllValues()[$this->basic_fee_type];
+            $text .= "<br>基本取付工賃: {$basic_fee_type}";
+        }
+        if($this->note) {
+            $text .= "<br>備考（通信欄）: {$this->note}";
+        }
+        return $text;
     }
     
     public function getIntroducerTypeAttribute() {

@@ -111,14 +111,11 @@ class CreateAgenciesTable extends Migration
             $table->string('desire_start_m')->nullable()->commet('希望分');
             $table->string('desire_end_h')->nullable()->commet('希望時');
             $table->string('desire_end_m')->nullable()->commet('希望分');
-            
-            $table->bigInteger('product_option_id')->nullable()->unsigned()->comment('商品オプション');
-            $table->foreign('product_option_id')->references('id')->on('product_options');
 
             $table->enum('basic_fee_type', BasicFeeType::ALL_OPTIONS)->nullable()->commet('基本取付工賃');
             
-            $table->integer('initial_price')->default(0)->nullable()->comment('初期費用合計金額');
-            $table->integer('month_price')->default(0)->nullable()->comment('月額料');
+            $table->string('initial_price')->nullable()->nullable()->comment('初期費用合計金額');
+            $table->string('month_price')->nullable()->nullable()->comment('月額料');
 
             $table->enum('commercial_privacy_type', CommercialPrivacyType::ALL_OPTIONS)->nullable()->commet('基本取付工賃');
             

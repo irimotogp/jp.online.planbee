@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CustomerRequest;
@@ -9,7 +8,6 @@ use App\Enums\SexType;
 use App\Enums\ContractType;
 use App\Enums\DepositType;
 use App\Enums\ShippingAddressType;
-
 /**
  * Class CustomerCrudController
  * @package App\Http\Controllers\Admin
@@ -74,6 +72,10 @@ class CustomerCrudController extends CrudController
             'name'      => 'kata'
         ]);
         $this->crud->addColumn([
+            'label'     => 'ﾆｯｸﾈｰﾑ',
+            'type'      => 'text',
+        ]);
+        $this->crud->addColumn([
             'label'     => '表示区分',
             'type'      => 'text',
             'name'      => 'display_type'
@@ -90,7 +92,7 @@ class CustomerCrudController extends CrudController
             'label'     => '生年月日',
             'type'      => 'date',
             'name'      => 'birthday',
-            'format' => 'Y/m/d'
+            'format' => 'YYYY/MM/DD'
         ]);
         $this->crud->addColumn([
             'label'     => '郵便番号',
@@ -234,10 +236,12 @@ class CustomerCrudController extends CrudController
         $this->crud->addColumn([
             'label'     => '紹介者ID',
             'type'      => 'text',
+            'name'      => 'syoukai_id'
         ]);
         $this->crud->addColumn([
             'label'     => '紹介者名',
             'type'      => 'text',
+            'name'      => 'syoukai_name'
         ]);
         $this->crud->addColumn([
             'label'     => 'SUｻﾎﾟｰﾀｰID',
@@ -305,6 +309,7 @@ class CustomerCrudController extends CrudController
             'type' => 'select',
             'name' => 'product_id',
             'attribute' => 'contract_type_text',
+            'key' => 'contract_type_text',
             'entity' => 'product',
             'model' => "App\Models\Product",
         ]);
@@ -319,9 +324,10 @@ class CustomerCrudController extends CrudController
         ]);
         $this->crud->addColumn([
             'label' => '購入商品1',
-            'type' => 'select',
+            'type'  => 'select',
             'name' => 'product_id',
             'attribute' => 'display_name',
+            'key' => 'display_name',
             'entity' => 'product',
             'model' => "App\Models\Product",
         ]);
@@ -367,6 +373,10 @@ class CustomerCrudController extends CrudController
             'type'      => 'text',
         ]);
         $this->crud->addColumn([
+            'label'     => '購入個数6',
+            'type'      => 'text',
+        ]);
+        $this->crud->addColumn([
             'label'     => '通知発行',
             'type'      => 'text',
         ]);
@@ -397,12 +407,12 @@ class CustomerCrudController extends CrudController
         ]);
         
         $this->crud->addColumn([
-            'label' => '預金種目',
-            'type' => 'select',
-            'name' => 'deposit_id',
+            'label'     => '預金種目',
+            'type'      => 'select',
+            'name'      => 'deposit_id',
             'attribute' => 'name',
-            'entity' => 'deposit',
-            'model' => "App\Models\Deposit",
+            'entity'    => 'deposit',
+            'model'     => "App\Models\Deposit",
         ]);
         $this->crud->addColumn([
             'label'     => '口座番号',
@@ -411,9 +421,9 @@ class CustomerCrudController extends CrudController
         ]);
         
         $this->crud->addColumn([
-            'label'     => '名義ｶﾅ',
+            'label'     => '口座名義（ｶﾅ）',
             'type'      => 'text',
-            'name'      => 'account_number'
+            'name'      => 'account_name'
         ]);
         $this->crud->addColumn([
             'label'     => '名義漢字',
@@ -430,6 +440,9 @@ class CustomerCrudController extends CrudController
         $this->crud->addColumn([
             'label'     => '備考',
             'type'      => 'text',
+            'name'      => 'custom_note',
+            'limit'     => 1000,
+            'escaped'   => false,
         ]);
         $this->crud->addColumn([
             'label'     => '備考',
@@ -457,7 +470,6 @@ class CustomerCrudController extends CrudController
             'name' => "identity_doc2",
             'type' => 'image',
         ]);
-
         /**
          * Columns can be defined using the fluent syntax or array syntax:
          * - CRUD::column('price')->type('number');
@@ -474,6 +486,7 @@ class CustomerCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(CustomerRequest::class);
+
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');

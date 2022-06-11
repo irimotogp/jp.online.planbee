@@ -36,7 +36,7 @@ class Product extends Model
         'contract_type_text'
     ];
 
-    public function agency() {
+    public function agencies() {
         return $this->hasMany(Agency::class);
     }
 

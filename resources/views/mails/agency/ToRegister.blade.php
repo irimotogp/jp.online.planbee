@@ -1,5 +1,5 @@
 @component('mail::message')
-{{ $data->introducer->sinsei_name }}様
+{{  $data->name }}様
 
 この度は、プランビー取次店申請をいただき誠にありがとうございます。
 ※  重要事項の記載がございますので、このメールは必ず保存してください。
@@ -83,6 +83,7 @@ FAX番号：　{{ $data->fax }}<br>
 @endif
 月額料支払方法：　{{ \App\Enums\MonthlyPaymentType::getAllValues()[$data->monthly_payment_type] }}<br>
 契約商品：　{{ $data->product->display_name }}<br>
+@if($data->product_id && $data->product->cashback == 1)
 銀行名：　{{ $data->bank_name }}<br>
 銀行コード：　{{ $data->bank_code }}<br>
 支店名：　{{ $data->branch_name }}<br>
@@ -90,6 +91,7 @@ FAX番号：　{{ $data->fax }}<br>
 預金種目：　{{ $data->deposit->name }}<br>
 口座番号：　{{ $data->account_number }}<br>
 口座名義（ｶﾅ）：　{{ $data->account_name }}<br>
+@endif
 @if($data->identity_doc)
 本人確認書類：　{{ $data->identity_doc_url }}<br>
 @endif
@@ -102,13 +104,16 @@ FAX番号：　{{ $data->fax }}<br>
 @if($data->desire_datetime_type == \App\Enums\DesireDateTimeType::SPECIAL)
 {{ $data->desire_date }} {{ $data->desire_start_h }}時{{ $data->desire_start_m }}分～{{ $data->desire_end_h }}時{{ $data->desire_end_m }}分<br>
 @endif
-@if($data->product_option_id)
-商品オプション：　{{ $data->product_option->name_price}}<br>
+@if($data->product_options)
+商品オプション：<br>
+@foreach($data->product_options as $product_option)
+・{{ $product_option->name_price }}<br>
+@endforeach
 @endif
 基本取付工賃：　{{ \App\Enums\BasicFeeType::getAllValues()[$data->basic_fee_type] }}<br>
 初期費用合計金額：　{{ $data->initial_price }}<br>
 月額料：　{{ $data->month_price }}<br>
-基本取付工賃：　{{ \App\Enums\CommercialPrivacyType::getAllValues()[$data->commercial_privacy_type] }}<br>
-備考（通信欄）：　{{ $data->note }}
+「特定商取引法に関する法律」第37条第1項及び第2項に定まる書類（概要書面）の交付について：　{{ \App\Enums\CommercialPrivacyType::getAllValues()[$data->commercial_privacy_type] }}<br>
+備考（通信欄）：　{{ $data->note }}・
 =====================================================
 @endcomponent

@@ -16,6 +16,8 @@ use App\Enums\DesireDateTimeType;
 use App\Enums\BasicFeeType;
 use App\Enums\CommercialPrivacyType;
 
+use App\Models\Product;
+
 class CustomerRequest extends FormRequest
 {
     /**
@@ -35,19 +37,26 @@ class CustomerRequest extends FormRequest
      */
     public function rules()
     {
+        $cashback_rule = "nullable";
+        if($product_id = $this->input('product_id')) {
+            $product = Product::find($product_id);
+            if($product->cashback == 1) {
+                $cashback_rule = "required";
+            }
+        }
         return [
             'uuid' => 'required',
             'sex_type' => 'required|in:' . implode(",", SexType::ALL_OPTIONS),
-            'kanji_sei' => 'required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
-            'kanji_mei' => 'required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
-            'kata_sei' => 'regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
-            'kata_mei' => 'regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
-            'corp_kanji' => 'required_if:sex_type,' . SexType::CORPORATION,
-            'corp_kata' => 'regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . SexType::CORPORATION,
-            'rep_kanji_sei' => 'required_if:sex_type,' . SexType::CORPORATION,
-            'rep_kanji_mei' => 'required_if:sex_type,' . SexType::CORPORATION,
-            'rep_kata_sei' => 'regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . SexType::CORPORATION,
-            'rep_kata_mei' => 'regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . SexType::CORPORATION,
+            'kanji_sei' => 'nullable|required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
+            'kanji_mei' => 'nullable|required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
+            'kata_sei' => 'nullable|regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
+            'kata_mei' => 'nullable|regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
+            'corp_kanji' => 'nullable|required_if:sex_type,' . SexType::CORPORATION,
+            'corp_kata' => 'nullable|regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . SexType::CORPORATION,
+            'rep_kanji_sei' => 'nullable|required_if:sex_type,' . SexType::CORPORATION,
+            'rep_kanji_mei' => 'nullable|required_if:sex_type,' . SexType::CORPORATION,
+            'rep_kata_sei' => 'nullable|regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . SexType::CORPORATION,
+            'rep_kata_mei' => 'nullable|regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . SexType::CORPORATION,
             'birthday' => 'required|date',
             'zip1' => 'required',
             'pref1' => 'required',
@@ -59,43 +68,45 @@ class CustomerRequest extends FormRequest
             'mobile_phone2' => 'nullable',
             'sinsei_email' => 'required|email:filter|max:255',
             'phone_email' => 'nullable|email:filter|max:255',
-            'work_place_name' => 'required',
-            'work_place_phone' => 'required',
+            'work_place_name' => 'required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
+            'work_place_phone' => 'required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
             'contract_type' => 'required|in:' . implode(",", ContractType::ALL_OPTIONS),
             'shipping_address_type' => 'nullable|in:' . implode(",", ShippingAddressType::ALL_OPTIONS) . '|required_if:contract_type,' . ContractType::BULK,
             'zip2' => 'required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
             'pref2' => 'required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
             'city2' => 'required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
             'addr2' => '',
-            'receiver_name' => 'required_if:contract_type,' . ContractType::BULK,
-            'receiver_phone' => 'nullable|required_if:contract_type,' . ContractType::BULK,
+            'receiver_name' => 'required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
+            'receiver_phone' => 'required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
             
             'initial_payment_type'  => 'required|in:' . implode(",", InitialPaymentType::ALL_OPTIONS),
-            'payment_number_type' => 'required_if:initial_payment_type,' . InitialPaymentType::CREDITCARD . '|nullable|in:' . implode(",", PaymentNumberType::ALL_OPTIONS),
-            'card_company_type' => 'required_if:initial_payment_type,' . InitialPaymentType::CREDITCARD . '|nullable|in:' . implode(",", CardCompanyType::ALL_OPTIONS),
-            'card_number' => 'required_if:initial_payment_type,' . InitialPaymentType::CREDITCARD . '|nullable|numeric|digits:6',
-            'card_name' => 'required_if:initial_payment_type,' . InitialPaymentType::CREDITCARD . '|nullable|alpha_num',
-            'expiration_date' => 'required_if:initial_payment_type,' . InitialPaymentType::CREDITCARD . '|nullable',
             'monthly_payment_type' => 'required|in:' . implode(",", MonthlyPaymentType::ALL_OPTIONS),
+            'payment_number_type' => 'required_if:monthly_payment_type,' . MonthlyPaymentType::CREDITCARD . '|required_if:initial_payment_type,' . InitialPaymentType::CREDITCARD . '|nullable|in:' . implode(",", PaymentNumberType::ALL_OPTIONS),
+            'card_company_type' => 'required_if:monthly_payment_type,' . MonthlyPaymentType::CREDITCARD . '|required_if:initial_payment_type,' . InitialPaymentType::CREDITCARD . '|nullable|in:' . implode(",", CardCompanyType::ALL_OPTIONS),
+            'card_number' => 'required_if:monthly_payment_type,' . MonthlyPaymentType::CREDITCARD . '|required_if:initial_payment_type,' . InitialPaymentType::CREDITCARD . '|nullable|numeric|digits:6',
+            'card_name' => 'required_if:monthly_payment_type,' . MonthlyPaymentType::CREDITCARD . '|required_if:initial_payment_type,' . InitialPaymentType::CREDITCARD . '|nullable',
+            'expiration_date' => 'required_if:monthly_payment_type,' . MonthlyPaymentType::CREDITCARD . '|required_if:initial_payment_type,' . InitialPaymentType::CREDITCARD . '|nullable|date_format:m/y',
             
             'product_id' => 'required|exists:products,id',
-            'bank_name' => 'required',
-            'bank_code' => 'required',
-            'branch_name' => 'required',
-            'branch_code' => 'required',
-            'deposit_id' => 'required|exists:deposits,id',
-            'account_number' => 'required',
-            'account_name' => 'required',
+            'bank_name' => $cashback_rule,
+            'bank_code' => $cashback_rule,
+            'branch_name' => $cashback_rule,
+            'branch_code' => $cashback_rule,
+            'deposit_id' => $cashback_rule . '|exists:deposits,id',
+            'account_number' => $cashback_rule,
+            'account_name' => $cashback_rule,
             'identity_doc' => 'required',
 
             'desire_month' => 'required',
             'desire_contact_type' => 'required|in:' . implode(",", DesireContacType::ALL_OPTIONS),
             'desire_datetime_type' => 'required|in:' . implode(",", DesireDateTimeType::ALL_OPTIONS),
-            'desire_date' => 'required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
+            'desire_date' => 'nullable|date|required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
             'desire_start_h' => 'required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
             'desire_start_m' => 'required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
             'desire_end_h' => 'required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
             'desire_end_m' => 'required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
+
+            'product_option_ids' => 'nullable|array', 
         ];
     }
 
@@ -190,12 +201,17 @@ class CustomerRequest extends FormRequest
             'rep_kata_sei.required_if' => 'ﾀﾞｲﾋｮｳｼｬｾｲは、必ず入力してください。',
             'rep_kata_mei.required_if' => 'ﾀﾞｲﾋｮｳｼｬﾒｲは、必ず入力してください。',
             'city2.required_if' => '住所１（番地まで）は、必ず入力してください。',
+
+            'work_place_name.required_if' => '勤務先名は、必ず入力してください。',
+            'work_place_phone.required_if' => '勤務先電話番号は、必ず入力してください。',
             
             'payment_number_type.required_if' => '支払い回数は、必ず入力してください。',
             'card_company_type.required_if' => 'カード会社は、必ず入力してください。',
             'card_number.required_if' => 'カード番号は、必ず入力してください。',
             'card_name.required_if' => 'カード名義は、必ず入力してください。',
+            // 'card_name.regex' => 'カード名義は、英字（大文字半角）のみを入力してください。',
             'expiration_date.required_if' => '有効期限は、必ず入力してください。',
+            'expiration_date.regex' => '有効期限は、MM/YY形式で入力してください。',
             'desire_date.required_if' => '日を指定してください。',
             'desire_start_h.required_if' => '時～を指定してください。',
             'desire_start_m.required_if' => '分～を指定してください。',
@@ -206,14 +222,21 @@ class CustomerRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            checkPhone1($validator, 'home_phone', $this->input('home_phone'));
-            checkPhone1($validator, 'fax', $this->input('fax'));
-            checkPhone2($validator, 'mobile_phone', $this->input('mobile_phone'));
-            checkPhone2($validator, 'mobile_phone2', $this->input('mobile_phone2'));
-            checkPhone1($validator, 'work_place_phone', $this->input('work_place_phone'));
-            checkPhone1($validator, 'receiver_phone', $this->input('receiver_phone'));
+            checkPhone($validator, 'home_phone', $this->input('home_phone'));
+            checkPhone($validator, 'fax', $this->input('fax'));
+            checkPhone($validator, 'work_place_phone', $this->input('work_place_phone'));
+            checkPhone($validator, 'receiver_phone', $this->input('receiver_phone'));
+            checkPhone11($validator, 'mobile_phone', $this->input('mobile_phone'));
+            checkPhone11($validator, 'mobile_phone2', $this->input('mobile_phone2'));
             if($this->input('agree') != 1) {
                 $validator->errors()->add('agree', '上記すべて確認し、同意してください。');
+            }
+            if($this->input('card_name')) {
+                $card_name = $this->input('card_name');
+                $card_name_filtered = str_replace(" ", "", $card_name);
+                if(!preg_match('/\A[A-Z]+\z/u', $card_name_filtered) || (strlen($card_name_filtered) + 1 < strlen($card_name))) {
+                    $validator->errors()->add('card_name', 'カード名義は、英字（大文字半角）のみを入力してください。');
+                }
             }
         });
     }

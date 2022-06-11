@@ -8,6 +8,7 @@
           name="bank"
           v-model="bank"
           :options="bank_options"
+          class="cus_v_select"
           :class="{ 'is-invalid': form.errors.has('bank_code') || form.errors.has('bank_name') }"
         ></v-select>
         <has-error :form="form" field="bank_code" />
@@ -25,6 +26,7 @@
           v-model="branch"
           @input="changeBranch"
           :options="branch_options"
+          class="cus_v_select"
           :class="{ 'is-invalid': form.errors.has('branch_code') || form.errors.has('branch_name') }"/>
         <has-error :form="form" field="branch_code" />
         <has-error :form="form" field="branch_name" />

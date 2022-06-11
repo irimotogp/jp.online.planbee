@@ -29,7 +29,7 @@ class ToRegister extends Mailable
      */
     public function build()
     {
-        return $this->subject('取次店登録申請ありがとうございます。')
+        return $this->subject('オンライン登録申請ありがとうございます。')
             ->markdown('mails.introducer.ToRegister');
     }
 }

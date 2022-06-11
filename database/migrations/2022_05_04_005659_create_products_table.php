@@ -22,7 +22,7 @@ class CreateProductsTable extends Migration
             $table->string('display_name')->nullable()->comment('表示名');
             $table->boolean('cashback')->default(0)->commet('キャッシュバック対象');
             $table->enum('contract_type', ContractType::ALL_OPTIONS)->nullable()->commet('契約タイプ,購入コース');
-            $table->enum('introducer_type', IntroducerType::ALL_OPTIONS)->nullable()->commet('タイプ');
+            $table->enum('introducer_type', IntroducerType::ALL_OPTIONS)->nullable()->commet('カテゴリー');
             
             $table->bigInteger('product_field_id')->nullable()->unsigned()->comment('分野');
             $table->foreign('product_field_id')->references('id')->on('product_fields');

@@ -41,8 +41,13 @@ class CustomerController extends Controller
                     ->get();
                 $product_options = Product::query()
                     ->whereIn('introducer_type', [IntroducerType::CUSTOMER, IntroducerType::ALL])
-                    ->where('cashback', 1)
-                    ->select(\DB::raw('id as value, display_name as text, contract_type, product_field_id'))
+                    ->select(\DB::raw('id as value, 
+                        display_name as text, 
+                        contract_type, 
+                        product_field_id, 
+                        cashback,
+                        initial_price,
+                        month_price'))
                     ->get();
                 $product_opt_options = ProductOption::query()
                     ->select(\DB::raw('id as value, name, price'))
@@ -53,6 +58,8 @@ class CustomerController extends Controller
                 return [
                     'status' => 'success',
                     'sinsei_email' => $introducer->sinsei_email,
+                    'syoukai_id' => $introducer->syoukai_id,
+                    'syoukai_name' => $introducer->syoukai_name,
                     'product_options' => $product_options,
                     'product_opt_options' => $product_opt_options,
                     'deposit_options' => $deposit_options,
@@ -69,23 +76,34 @@ class CustomerController extends Controller
     }
 
     public function register(CustomerRequest $request) {
-        if($request->input('confirm', false)) {
-            return response()->json(['status' => 'confirmed']);
-        }
-        $introducer = Introducer::query()
-            ->where('introducer_type', IntroducerType::CUSTOMER)
-            ->where('uuid', $request->input('uuid'))
-            ->first();
-        $data = $request->input();
-        $data['mobile_phone'] = isset($data['mobile_phone']) ? dataToPhoneType($data['mobile_phone']) : null;
-        $data['mobile_phone2'] = isset($data['mobile_phone2']) ? dataToPhoneType($data['mobile_phone2']) : null;
-        $data['pref1'] = isset($data['pref1']) ? getTextOfProf($data['pref1']) : null;
-        $data['pref2'] = isset($data['pref2']) ? getTextOfProf($data['pref2']) : null;
-        $data['introducer_id'] = $introducer->id;
-        $customer = Customer::create($data);
-        
-        Mail::to($customer->introducer->sinsei_email)->queue(new ToRegister($customer));
+        \DB::beginTransaction();
+        try {        
+            if($request->input('confirm', false)) {
+                return response()->json(['status' => 'confirmed']);
+            }
+            $introducer = Introducer::query()
+                ->where('introducer_type', IntroducerType::CUSTOMER)
+                ->where('uuid', $request->input('uuid'))
+                ->first();
+            $data = $request->input();
+            $data['mobile_phone'] = isset($data['mobile_phone']) ? dataToPhoneType($data['mobile_phone']) : null;
+            $data['mobile_phone2'] = isset($data['mobile_phone2']) ? dataToPhoneType($data['mobile_phone2']) : null;
+            $data['pref1'] = isset($data['pref1']) ? getTextOfProf($data['pref1']) : null;
+            $data['pref2'] = isset($data['pref2']) ? getTextOfProf($data['pref2']) : null;
+            $data['introducer_id'] = $introducer->id;
+            $customer = Customer::create($data);
 
-        return response()->json(['status' => 'success']);
+            if(count($request->input('product_option_ids')) > 0) {
+                $customer->product_options()->sync($request->input('product_option_ids'));
+            }
+            \DB::commit();
+            Mail::to($customer->introducer->sinsei_email)->queue(new ToRegister($customer));
+
+            return response()->json(['status' => 'success']);
+        } catch (\Throwable $e) {
+            \DB::rollBack();
+
+            return response()->json(['status' => 'failed', 'error' => $e->getMessage()]);
+        }
     }
 }

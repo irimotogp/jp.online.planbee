@@ -61,6 +61,9 @@ class CreateCustomersTable extends Migration
             
             $table->enum('contract_type', ContractType::ALL_OPTIONS)->nullable()->commet('契約タイプ');
 
+            $table->string('syoukai_id')->nullable()->commet('紹介取次店ID');
+            $table->string('syoukai_name')->nullable()->commet('紹介取次店名');
+
             $table->enum('shipping_address_type', ShippingAddressType::ALL_OPTIONS)->nullable()->commet('配送先指定');
 
             $table->string('zip2')->nullable()->commet('配送先-郵便番号');
@@ -110,11 +113,9 @@ class CreateCustomersTable extends Migration
 
             $table->enum('basic_fee_type', BasicFeeType::ALL_OPTIONS)->nullable()->commet('基本取付工賃');
             
-            $table->integer('initial_price')->default(0)->nullable()->comment('初期費用合計金額');
-            $table->integer('month_price')->default(0)->nullable()->comment('月額料');
+            $table->string('initial_price')->nullable()->nullable()->comment('初期費用合計金額');
+            $table->string('month_price')->nullable()->nullable()->comment('月額料');
 
-            $table->enum('commercial_privacy_type', CommercialPrivacyType::ALL_OPTIONS)->nullable()->commet('基本取付工賃');
-            
             $table->text('note')->nullable()->commet('備考（通信欄）');
             
             $table->timestamps();

@@ -1,19 +1,18 @@
 <?php
 
 
-function checkPhone1($validator, $label, $value) {
+function checkPhone($validator, $label, $value) {
   if($value) {
       $value_filter = preg_replace('/-/', '', $value);
-      if(!preg_match('/\A[0-9]+\z/', $value_filter) || strlen($value_filter) != 10) {
-          $validator->errors()->add($label, '0~9までの半角10桁数字をハイフンを使って入力してください。');
+      if(!preg_match('/\A[0-9]+\z/', $value_filter) || (strlen($value_filter) != 10 && strlen($value_filter) != 11)) {
+          $validator->errors()->add($label, '0~9までの半角10~11桁数字をハイフンを使って入力してください。');
       }
   }
 }
-
-function checkPhone2($validator, $label, $value) {
+function checkPhone11($validator, $label, $value) {
   if($value) {
       $value_filter = preg_replace('/-/', '', $value);
-      if(!preg_match('/\A[0-9]+\z/', $value_filter) || strlen($value_filter) != 11) {
+      if(!preg_match('/\A[0-9]+\z/', $value_filter) || (strlen($value_filter) != 11)) {
           $validator->errors()->add($label, '0~9までの半角11桁数字をハイフンを使って入力してください。');
       }
   }
@@ -22,7 +21,10 @@ function checkPhone2($validator, $label, $value) {
 function dataToPhoneType($value) {
   if($value) {
     $value_filter = " " . preg_replace('/-/', '', $value);
-    $result = str_split($value_filter, 4);
+    $result = [];
+    $result[] = substr($value_filter, 0, 4); 
+    $result[] = substr($value_filter, 4, 4); 
+    $result[] = substr($value_filter, 8, 4); 
     return implode("-", $result);
   } else {
     return "";

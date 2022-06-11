@@ -32,7 +32,7 @@ class AgencyCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Agency::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/agency');
-        CRUD::setEntityNameStrings('', 'オンライン取次店登録申請');
+        CRUD::setEntityNameStrings('', 'オンライン登録申請');
         $this->crud->denyAccess(['show', 'create', 'delete', 'update']);
         $this->crud->enableExportButtons();
     }
@@ -74,6 +74,10 @@ class AgencyCrudController extends CrudController
             'name'      => 'kata'
         ]);
         $this->crud->addColumn([
+            'label'     => 'ﾆｯｸﾈｰﾑ',
+            'type'      => 'text',
+        ]);
+        $this->crud->addColumn([
             'label'     => '表示区分',
             'type'      => 'text',
             'name'      => 'display_type'
@@ -90,7 +94,7 @@ class AgencyCrudController extends CrudController
             'label'     => '生年月日',
             'type'      => 'date',
             'name'      => 'birthday',
-            'format' => 'Y/m/d'
+            'format' => 'YYYY/MM/DD'
         ]);
         $this->crud->addColumn([
             'label'     => '郵便番号',
@@ -309,6 +313,7 @@ class AgencyCrudController extends CrudController
             'type' => 'select',
             'name' => 'product_id',
             'attribute' => 'contract_type_text',
+            'key' => 'contract_type_text',
             'entity' => 'product',
             'model' => "App\Models\Product",
         ]);
@@ -323,9 +328,10 @@ class AgencyCrudController extends CrudController
         ]);
         $this->crud->addColumn([
             'label' => '購入商品1',
-            'type' => 'select',
+            'type'  => 'select',
             'name' => 'product_id',
             'attribute' => 'display_name',
+            'key' => 'display_name',
             'entity' => 'product',
             'model' => "App\Models\Product",
         ]);
@@ -371,6 +377,10 @@ class AgencyCrudController extends CrudController
             'type'      => 'text',
         ]);
         $this->crud->addColumn([
+            'label'     => '購入個数6',
+            'type'      => 'text',
+        ]);
+        $this->crud->addColumn([
             'label'     => '通知発行',
             'type'      => 'text',
         ]);
@@ -401,12 +411,12 @@ class AgencyCrudController extends CrudController
         ]);
         
         $this->crud->addColumn([
-            'label' => '預金種目',
-            'type' => 'select',
-            'name' => 'deposit_id',
+            'label'     => '預金種目',
+            'type'      => 'select',
+            'name'      => 'deposit_id',
             'attribute' => 'name',
-            'entity' => 'deposit',
-            'model' => "App\Models\Deposit",
+            'entity'    => 'deposit',
+            'model'     => "App\Models\Deposit",
         ]);
         $this->crud->addColumn([
             'label'     => '口座番号',
@@ -415,9 +425,9 @@ class AgencyCrudController extends CrudController
         ]);
         
         $this->crud->addColumn([
-            'label'     => '名義ｶﾅ',
+            'label'     => '口座名義（ｶﾅ）',
             'type'      => 'text',
-            'name'      => 'account_number'
+            'name'      => 'account_name'
         ]);
         $this->crud->addColumn([
             'label'     => '名義漢字',
@@ -434,6 +444,9 @@ class AgencyCrudController extends CrudController
         $this->crud->addColumn([
             'label'     => '備考',
             'type'      => 'text',
+            'name'      => 'custom_note',
+            'limit' => 1000,
+            'escaped'   => false,
         ]);
         $this->crud->addColumn([
             'label'     => '備考',
