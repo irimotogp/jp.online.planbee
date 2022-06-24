@@ -123,6 +123,22 @@
                 <has-error :form="form" field="isd_name" />
               </div>
             </div>
+            
+            <!-- direction_type -->
+            <div class="mb-3 row">
+              <label class="col-md-5 col-form-label text-md-end">直上者の<span class="col-form-mark">必須</span></label>
+              <div class="col-md-7">
+                <b-form-radio-group
+                  @change="changeDicrectionType"
+                  id="radiobox-group-direction_type"
+                  v-model="form.direction_type"
+                  class="mt-2"
+                  :options="direction_type_options"
+                  :class="{ 'is-invalid': form.errors.has('direction_type') }"
+                ></b-form-radio-group>
+                <has-error :form="form" field="direction_type" />
+              </div>
+            </div>
           </template>
           
           <!-- weg_type -->
@@ -177,13 +193,12 @@ export default {
     this.nth_type_options = this.dicToArray(window.config.NthType)
     this.isd_type_options = this.dicToArray(window.config.ISDType)
     this.weg_type_options = this.dicToArray(window.config.WEGType)
+    this.direction_type_options = this.dicToArray(window.config.DirectionType)
     this.form.introducer_type = 'AGENCY'
     this.form.nth_type = 'FIRST'
     this.form.isd_type = 'AUTOMATIC'
     this.form.weg_type = 'ATTACHABLE'
     this.changeNthType()
-
-    console.log('---------weg_type_options--------', this.weg_type_options)
   },
 
   data: () => ({
@@ -200,6 +215,7 @@ export default {
       isd_type: null,
       isd_id: null,
       isd_name: null,
+      direction_type: null,
     }),
     isd_type_options: [],
     nth_type_options: [],
@@ -229,6 +245,7 @@ export default {
       if(this.form.isd_type == 'AUTOMATIC') {
         this.form.isd_id = null
         this.form.isd_name = null
+        this.form.direction_type = null
       }
     },
     changeNthType() {
@@ -239,6 +256,9 @@ export default {
       } else {
         this.isd_type_options.filter(x => x.value != 'AUTOMATIC').map((x) => { x.disabled = false; return x;})
       }
+    },
+    changeDicrectionType() {
+
     },
     dicToArray(dic) {
       var result = []

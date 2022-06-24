@@ -19,6 +19,8 @@ $config = [
     'DesireDateTimeType' =>  App\Enums\DesireDateTimeType::getAllValues(),
     'BasicFeeType' => App\Enums\BasicFeeType::getAllValues(),
     'CommercialPrivacyType' => App\Enums\CommercialPrivacyType::getAllValues(),
+    'DirectionType' => App\Enums\DirectionType::getFormAllValues()
+
 ];
 $appJs = mix('dist/js/app.js');
 $appCss = mix('dist/css/app.css');

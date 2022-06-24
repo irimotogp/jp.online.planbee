@@ -17,6 +17,7 @@ use App\Models\ProductOption;
 use App\Models\Privacy;
 
 use App\Mail\Agency\ToRegister;
+use App\Mail\Agency\ToAdmin;
 
 class AgencyController extends Controller
 {
@@ -99,6 +100,7 @@ class AgencyController extends Controller
             \DB::commit();
             
             Mail::to($agency->introducer->sinsei_email)->queue(new ToRegister($agency));
+            Mail::to(config('mail.send.admin'))->queue(new ToAdmin($agency));
 
             return response()->json(['status' => 'success']);
         } catch (\Throwable $e) {

@@ -1,38 +1,4 @@
 @component('mail::message')
-{{  $data->kanji }}様
-
-この度は、プランビー取次店申請をいただき誠にありがとうございます。
-※  重要事項の記載がございますので、このメールは必ず保存してください。
-
-＜今後の流れについて＞
-1.　契約内容確認のお電話
-ご指定の時間帯に、弊社からお電話いたします。
-※ 概要書面をまだお受け取りいただいていない場合は、概要書面を郵送いたします。
-　 概要書面をお受け取りいただいてからのお電話となります。
-
-2.　初期費用のお支払い
-■クレジットカード決済の場合：お電話終了後に決済いたします。
-決済日の指定がありましたらお電話の際にお申し付けください。
-
-■銀行振込の場合：下記振込先までお振り込みください。
-【振込先】http://bit.ly/1M7qSZK
-
-3．月額料の口座振替払いを選択された方
-「口座振替依頼書」を郵送いたしますので、記入・捺印後にご返信ください。
-
-以上が完了しましたら、ご登録・商品発送となります。
-本メールの内容や契約内容についてご不明な点は、お気軽にお問い合わせください。
-
-【電話】050-1746-7757（平日10～17時）
-【メール】info@planbee.co.jp
-【LINE】最新情報を配信！個別のお問い合わせにも対応しています。
-ともだち追加はこちらから  https://lin.ee/qgX1ZjO
-
-【会社情報】
-株式会社プランビー
-代表取締役　井利元　聖史
-〒940-2039　新潟県長岡市関原南2-4077-1
-
 以下、ご入力いただいた申請内容です。
 =====================================================
 性別：　{{ \App\Enums\SexType::getAllValues()[$data->sex_type] }}<br>
@@ -71,10 +37,6 @@ FAX番号：　{{ $data->fax }}<br>
 宛先電話番号：　{{ $data->receiver_phone }}<br>
 @endif
 @endif
-紹介取次店ID：　{{ $data->syoukai_id }}<br>
-紹介取次店名：　{{ $data->syoukai_name }}<br>
-エバンジェリストID：　{{ $data->eva_id }}<br>
-エバンジェリスト名：　{{ $data->eva_name }}<br>
 初期費用支払方法：　{{ \App\Enums\InitialPaymentType::getAllValues()[$data->initial_payment_type] }}<br>
 @if($data->initial_payment_type == \App\Enums\ContractType::BULK)
 支払い回数：　{{ \App\Enums\PaymentNumberType::getAllValues()[$data->payment_number_type] }}<br>
@@ -87,6 +49,7 @@ FAX番号：　{{ $data->fax }}<br>
 月額料支払方法：　{{ \App\Enums\MonthlyPaymentType::getAllValues()[$data->monthly_payment_type] }}<br>
 @endif
 契約商品：　{{ $data->product->display_name }}<br>
+@if($data->product_id && $data->product->cashback == 1)
 銀行名：　{{ $data->bank_name }}<br>
 銀行コード：　{{ $data->bank_code }}<br>
 支店名：　{{ $data->branch_name }}<br>
@@ -94,6 +57,7 @@ FAX番号：　{{ $data->fax }}<br>
 預金種目：　{{ $data->deposit->name }}<br>
 口座番号：　{{ $data->account_number }}<br>
 口座名義（ｶﾅ）：　{{ $data->account_name }}<br>
+@endif
 @if($data->identity_doc)
 本人確認書類：　{{ $data->identity_doc_url }}<br>
 @endif
@@ -115,7 +79,6 @@ FAX番号：　{{ $data->fax }}<br>
 基本取付工賃：　{{ \App\Enums\BasicFeeType::getAllValues()[$data->basic_fee_type] }}<br>
 初期費用合計金額：　{{ $data->initial_price }}<br>
 月額料：　{{ $data->month_price }}<br>
-「特定商取引法に関する法律」第37条第1項及び第2項に定まる書類（概要書面）の交付について：　{{ \App\Enums\CommercialPrivacyType::getAllValues()[$data->commercial_privacy_type] }}<br>
 @if($data->note)
 備考（通信欄）：　{{ $data->note }}
 @endif

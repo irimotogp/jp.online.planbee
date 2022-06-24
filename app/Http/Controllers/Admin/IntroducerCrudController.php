@@ -104,7 +104,13 @@ class IntroducerCrudController extends CrudController
             'name'      => 'isd_name', 
         ]);
         $this->crud->addColumn([
-            'label' => '直上者指定',
+            'label' => 'ライン',
+            'type' => 'select_from_array',
+            'name' => 'direction_type',
+            'options' => \App\Enums\DirectionType::getLabelAllValues(),
+        ]);
+        $this->crud->addColumn([
+            'label' => '取付について',
             'type' => 'select_from_array',
             'name' => 'weg_type',
             'options' => \App\Enums\WEGType::getAllValues(),

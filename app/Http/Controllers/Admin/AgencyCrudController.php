@@ -257,20 +257,32 @@ class AgencyCrudController extends CrudController
         ]);
         $this->crud->addColumn([
             'label'     => '直上者ID',
-            'type'      => 'text',
-            'name'      => 'isd_id_text'
+            'type'      => 'relationship',
+            'name'      => 'introducer_id',
+            'attribute' => 'isd_id',
+            'key'       => 'isd_id',
+            'entity'    => 'introducer',
+            'model'     => "App\Models\Introducer",
         ]);
         $this->crud->addColumn([
             'label'     => '直上者名',
-            'type'      => 'text',
-            'name'      => 'isd_name_text'
+            'type'      => 'relationship',
+            'name'      => 'introducer_id',
+            'attribute' => 'isd_name',
+            'key'       => 'isd_name',
+            'entity'    => 'introducer',
+            'model'     => "App\Models\Introducer",
+        ]);
+        $this->crud->addColumn([
+            'label' => 'ライン',
+            'type' => 'relationship',
+            'name' => 'introducer_id',
+            'attribute' => 'direction_type_text',
+            'key' => 'direction_type_text',
+            'entity' => 'introducer',
+            'model' => "App\Models\Introducer",
         ]);
 
-        $this->crud->addColumn([
-            'label'     => 'ﾗｲﾝ',
-            'type'      => 'text',
-            'name'      => 'line_text'
-        ]);
         $this->crud->addColumn([
             'label'     => '位置指定',
             'type'      => 'text',
@@ -330,7 +342,7 @@ class AgencyCrudController extends CrudController
             'label' => '購入商品1',
             'type'  => 'select',
             'name' => 'product_id',
-            'attribute' => 'display_name',
+            'attribute' => 'code',
             'key' => 'display_name',
             'entity' => 'product',
             'model' => "App\Models\Product",

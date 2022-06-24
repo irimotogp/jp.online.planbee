@@ -106,7 +106,8 @@ class CreateAgenciesTable extends Migration
             $table->integer('desire_month')->nullable()->commet('希望登録月');
             $table->enum('desire_contact_type', DesireContacType::ALL_OPTIONS)->nullable()->commet('本人確認の希望連絡先');
             $table->enum('desire_datetime_type', DesireDateTimeType::ALL_OPTIONS)->nullable()->commet('希望日時');
-            $table->string('desire_date')->nullable()->commet('希望日');
+            $table->string('desire_auth_month')->nullable()->commet('希望月');
+            $table->string('desire_auth_day')->nullable()->commet('希望日');
             $table->string('desire_start_h')->nullable()->commet('希望時');
             $table->string('desire_start_m')->nullable()->commet('希望分');
             $table->string('desire_end_h')->nullable()->commet('希望時');

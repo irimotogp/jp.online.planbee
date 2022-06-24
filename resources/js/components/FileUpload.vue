@@ -17,6 +17,10 @@
 </style>
 <script>
     export default{
+  watch: {
+  },
+  watch: {
+  },
         props: [ 'form', 'name', 'label', 'disabled', 'need' ],
         created() {
           var image = this.form[this.name]

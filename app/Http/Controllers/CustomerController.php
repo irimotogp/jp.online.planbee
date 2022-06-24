@@ -17,6 +17,7 @@ use App\Models\ProductOption;
 use App\Models\Privacy;
 
 use App\Mail\Customer\ToRegister;
+use App\Mail\Customer\ToAdmin;
 
 class CustomerController extends Controller
 {
@@ -98,6 +99,7 @@ class CustomerController extends Controller
             }
             \DB::commit();
             Mail::to($customer->introducer->sinsei_email)->queue(new ToRegister($customer));
+            Mail::to(config('mail.send.admin'))->queue(new ToAdmin($customer));
 
             return response()->json(['status' => 'success']);
         } catch (\Throwable $e) {

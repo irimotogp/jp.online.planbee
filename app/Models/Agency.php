@@ -98,7 +98,8 @@ class Agency extends Model
         'desire_month',
         'desire_contact_type',
         'desire_datetime_type',
-        'desire_date',
+        'desire_auth_month',
+        'desire_auth_day',
         'desire_start_h',
         'desire_start_m',
         'desire_end_h',
@@ -115,14 +116,11 @@ class Agency extends Model
     ];
     
     protected $appends = [
-        'name',
         'kanji',
         'kata',
         'display_type',
         'introducer_type',
-        'isd_id_text',
         'isd_name_text',
-        'line_text',
         'continue_payment_law_text',
         'product_buy_num_text',
         'identity_doc_url',
@@ -150,25 +148,25 @@ class Agency extends Model
         return $this->belongsTo(ShippingAddress::class);
     }
     
-    public function getNameAttribute() {
+    public function getKanjiAttribute() {
         if($this->sex_type != SexType::CORPORATION) {
-            return $this->kanji_sei . " " .  $this->kanji_mei . "（" . $this->kata_sei . " " .  $this->kata_mei . "）";
+            return $this->kanji_sei . " " .  $this->kanji_mei;
         } else {
-            return $this->corp_kanji . "（" . $this->corp_kanji  . "）" . " " .  
-                $this->rep_kanji_sei . " " .  $this->rep_kanji_mei . "（" . $this->rep_kata_sei . " " .  $this->rep_kata_mei . "）";
+            return $this->corp_kanji . $this->rep_kanji_sei .  $this->rep_kanji_mei;
         }
     }
     
-    public function getKanjiAttribute() {
-        return $this->kanji_sei . " " .  $this->kanji_mei;
-    }
-    
     public function getKataAttribute() {
-        return $this->kata_sei . " " .  $this->kata_mei;
+        if($this->sex_type != SexType::CORPORATION) {
+            return $this->kata_sei . " " .  $this->kata_mei;
+        } else {
+            return $this->corp_kata . $this->rep_kata_sei .  $this->rep_kata_mei;
+        }
     }
 
     public function getCustomNoteAttribute() {
-        $text = "希望登録月: {$this->desire_month}月";
+        $text = "送信日時: " . $this->created_at->format('Y/m/d H:i:s');
+        $text .= "<br>希望登録月: {$this->desire_month}月";
         if($this->desire_contact_type) {
             $desire_contact_type_text = DesireContacType::getAllValues()[$this->desire_contact_type];
             $text .= "<br>本人確認の希望連絡先: {$desire_contact_type_text}";
@@ -177,8 +175,7 @@ class Agency extends Model
             $desire_datetime_type_text = DesireDateTimeType::getAllValues()[$this->desire_datetime_type];
             $text .= "<br>希望日時: {$desire_datetime_type_text}";
         } else {
-            $desire_date = date('Y年m月d日', strtotime($this->desire_date));
-            $text .= "<br>希望日時: {$desire_date} {$this->desire_start_h}時{$this->desire_start_m}分" . " ~ " . 
+            $text .= "<br>希望日時: {$this->desire_auth_month}月{$this->desire_auth_day}日 {$this->desire_start_h}時{$this->desire_start_m}分" . " ~ " . 
                 "{$this->desire_end_h}時{$this->desire_end_m}分";
         }
         if(count($this->product_options) > 0) {
@@ -191,7 +188,7 @@ class Agency extends Model
         }
         if($this->commercial_privacy_type) {
             $commercial_privacy_type = CommercialPrivacyType::getAllValues()[$this->commercial_privacy_type];
-            $text .= "<br>基本取付工賃: {$commercial_privacy_type}";
+            $text .= "<br>概要書面の交付: {$commercial_privacy_type}";
         }
         if($this->note) {
             $text .= "<br>備考（通信欄）: {$this->note}";
@@ -205,10 +202,6 @@ class Agency extends Model
 
     public function getDisplayTypeAttribute() {
         return "通常表示";
-    }
-
-    public function getLineTextAttribute() {
-        return "左会員";
     }
 
     public function getContinuePaymentLawTextAttribute() {

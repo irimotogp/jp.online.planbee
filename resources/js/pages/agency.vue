@@ -58,7 +58,7 @@
                   class="form-control" 
                   type="text" 
                   name="corp_kanji" 
-                  placeholder="姓名">
+                  placeholder="法人名">
                 <has-error :form="form" field="corp_kanji" />
                 <input 
                   :disabled="disabled" 
@@ -68,7 +68,7 @@
                   class="form-control mt-3" 
                   type="text" 
                   name="corp_kata" 
-                  placeholder="ｾｲﾒｲ">
+                  placeholder="ﾎｳｼﾞﾝﾒｲ">
                 <has-error :form="form" field="corp_kata" />
               </div>
             </div>
@@ -190,13 +190,14 @@
             </div>
           </template>
             
-          <div class="mb-3 row">
-            <div class="col-md-4 "><label class="col-form-label text-md-right">生年月日<span class="col-form-mark">必須</span></label></div>
-            <div class="col-md-6">
-              <input :disabled="disabled" v-model="form.birthday" :class="{ 'is-invalid': form.errors.has('birthday') }" class="form-control" type="text" name="birthday" id="birthday" placeholder="1990-01-01">
-              <has-error :form="form" field="birthday" />
-            </div>
-          </div>
+          <birth-day
+            :update="updateBirthday"
+            :form="form"
+            :disabled="disabled"
+            :need="true"
+            name="birthday"
+            label="生年月日"
+          ></birth-day>
 
           <zip-code 
             :disabled="disabled"
@@ -384,25 +385,27 @@
             </div>
           </div>
 
-          <div class="mb-3 row">
-            <div class="col-md-4 "><label class="col-form-label text-md-right">月額料支払方法<span class="col-form-mark">必須</span></label></div>
-            <div class="col-md-8">
-              <b-form-radio-group
-                :disabled="disabled"
-                @change="changePayment"
-                id="radiobox-group-monthly_payment_type"
-                v-model="form.monthly_payment_type"
-                class="mt-2"
-                :options="monthly_payment_options"
-                :class="{ 'is-invalid': form.errors.has('monthly_payment_type') }"
-              ></b-form-radio-group>
-              <has-error :form="form" field="monthly_payment_type" />
+          <template v-if="form.contract_type != 'BULK'">
+            <div class="mb-3 row">
+              <div class="col-md-4 "><label class="col-form-label text-md-right">月額料支払方法<span class="col-form-mark">必須</span></label></div>
+              <div class="col-md-8">
+                <b-form-radio-group
+                  :disabled="disabled"
+                  @change="changePayment"
+                  id="radiobox-group-monthly_payment_type"
+                  v-model="form.monthly_payment_type"
+                  class="mt-2"
+                  :options="monthly_payment_options"
+                  :class="{ 'is-invalid': form.errors.has('monthly_payment_type') }"
+                ></b-form-radio-group>
+                <has-error :form="form" field="monthly_payment_type" />
+              </div>
             </div>
-          </div>
+          </template>
 
           <template v-if="form.initial_payment_type == 'CREDITCARD' || form.monthly_payment_type == 'CREDITCARD' ">
             <div class="mb-3 row">
-              <div class="col-md-4 "><label class="col-form-label text-md-right">支払い回数<span class="col-form-mark">必須</span></label></div>
+              <div class="col-md-4 "><label class="col-form-label text-md-right">支払い回数（初期費用）<span class="col-form-mark">必須</span></label></div>
               <div class="col-md-8">
                 <b-form-select 
                   :disabled="disabled"
@@ -448,7 +451,7 @@
             <div class="mb-3 row">
               <div class="col-md-4 "><label class="col-form-label text-md-right">有効期限<span class="col-form-mark">必須</span></label></div>
               <div class="col-md-6">
-                <input :disabled="disabled" v-model="form.expiration_date" type="text" :class="{ 'is-invalid': form.errors.has('expiration_date') }" class="form-control"  name="expiration_date" id="expiration_date" placeholder="MM/YY">
+                <input :disabled="disabled" v-model="form.expiration_date" @change="changeMMYY('expiration_date')" type="text" :class="{ 'is-invalid': form.errors.has('expiration_date') }" class="form-control"  name="expiration_date" id="expiration_date" placeholder="MM/YY">
                 <has-error :form="form" field="expiration_date" />
               </div>
             </div>
@@ -467,46 +470,45 @@
               <has-error :form="form" field="product_id" />
             </div>
           </div>
-          <template v-if="product_cashback_on_check">
-            <div class="mb-3 row">
-              <label class="offset-md-4 col-md-8 col-form-label text-md-left">キャッシュバック口座（レンタル期間3年経過時に初期費用の一部または全部がご指定の口座にキャッシュバックされます）</label>
-            </div>
 
-            <bank-code 
-              :disabled="disabled"
-              @updateBank="updateBank"
-              @updateBranch="updateBranch"
-              :form="form"/>
+          <div class="mb-3 row">
+            <label class="offset-md-4 col-md-8 col-form-label text-md-left">キャッシュバック口座（レンタル期間3年経過時に初期費用の一部または全部がご指定の口座にキャッシュバックされます）</label>
+          </div>
+
+          <bank-code 
+            :disabled="disabled"
+            @updateBank="updateBank"
+            @updateBranch="updateBranch"
+            :form="form"/>
+          
+          <div class="mb-3 row">
+            <div class="col-md-4 "><label class="col-form-label text-md-right">預金種目<span class="col-form-mark">必須</span></label></div>
+            <div class="col-md-8">
+              <b-form-select 
+                :disabled="disabled"
+                id="radiobox-group-deposit_id"
+                v-model="form.deposit_id"
+                :options="deposit_options"
+                :class="{ 'is-invalid': form.errors.has('deposit_id') }"></b-form-select>
+              <has-error :form="form" field="deposit_id" />
+            </div>
+          </div>
             
-            <div class="mb-3 row">
-              <div class="col-md-4 "><label class="col-form-label text-md-right">預金種目<span class="col-form-mark">必須</span></label></div>
-              <div class="col-md-8">
-                <b-form-select 
-                  :disabled="disabled"
-                  id="radiobox-group-deposit_id"
-                  v-model="form.deposit_id"
-                  :options="deposit_options"
-                  :class="{ 'is-invalid': form.errors.has('deposit_id') }"></b-form-select>
-                <has-error :form="form" field="deposit_id" />
-              </div>
+          <div class="mb-3 row">
+            <div class="col-md-4 "><label class="col-form-label text-md-right">口座番号<span class="col-form-mark">必須</span></label></div>
+            <div class="col-md-6">
+              <input :disabled="disabled" v-model="form.account_number" :class="{ 'is-invalid': form.errors.has('account_number') }" class="form-control" type="text" name="account_number" id="account_number">
+              <has-error :form="form" field="account_number" />
             </div>
-              
-            <div class="mb-3 row">
-              <div class="col-md-4 "><label class="col-form-label text-md-right">口座番号<span class="col-form-mark">必須</span></label></div>
-              <div class="col-md-6">
-                <input :disabled="disabled" v-model="form.account_number" :class="{ 'is-invalid': form.errors.has('account_number') }" class="form-control" type="text" name="account_number" id="account_number">
-                <has-error :form="form" field="account_number" />
-              </div>
+          </div>
+            
+          <div class="mb-3 row">
+            <div class="col-md-4 "><label class="col-form-label text-md-right">口座名義（ｶﾅ）<span class="col-form-mark">必須</span><span class="col-form-desc">※銀行に届け出ている名義を省略せずに入力してください。</span></label></div>
+            <div class="col-md-6">
+              <input :disabled="disabled" @change="changeKana('account_name')" v-model="form.account_name" :class="{ 'is-invalid': form.errors.has('account_name') }" class="form-control" type="text" name="account_name" id="account_name">
+              <has-error :form="form" field="account_name" />
             </div>
-              
-            <div class="mb-3 row">
-              <div class="col-md-4 "><label class="col-form-label text-md-right">口座名義（ｶﾅ）<span class="col-form-mark">必須</span><span class="col-form-desc">※銀行に届け出ている名義を省略せずに入力してください。</span></label></div>
-              <div class="col-md-6">
-                <input :disabled="disabled" @change="changeKana('account_name')" v-model="form.account_name" :class="{ 'is-invalid': form.errors.has('account_name') }" class="form-control" type="text" name="account_name" id="account_name">
-                <has-error :form="form" field="account_name" />
-              </div>
-            </div>
-          </template>
+          </div>
 
           <file-upload
             :disabled="disabled"
@@ -570,56 +572,57 @@
               </div>
               <template v-if="form.desire_datetime_type == 'SPECIAL'">
                 <div class="mt-3">
-                  <input :disabled="disabled" v-model="form.desire_date" :class="{ 'is-invalid': form.errors.has('desire_date') }" class="form-control" type="text" name="desire_date" id="desire_date" placeholder="2022-01-01">
-                  <has-error :form="form" field="desire_date" />
-                </div>
-                <div class="mt-3">
-                  <div class="row" :class="{ 'is-invalid': form.errors.has('desire_start_h') || form.errors.has('desire_start_m') || form.errors.has('desire_end_h') || form.errors.has('desire_end_m') }">
-                    <div class="col-3">
-                      <b-form inline>
-                        <b-form-select 
-                          :disabled="disabled"
-                          :class="{ 'is-invalid': form.errors.has('desire_start_h') }"
-                          id="b-form-select-desire_start_h"
+                  <div :class="{ 'is-invalid': form.errors.has('desire_auth_month') || form.errors.has('desire_auth_day') || form.errors.has('desire_start_h') || form.errors.has('desire_start_m') || form.errors.has('desire_end_h') || form.errors.has('desire_end_m') }">
+                    <div  class="form-row">
+                      <div class="col-3">
+                        <b-form-select
+                          @change="init_desire_auth_day_options"
+                          :disabled="disabled" 
+                          v-model="form.desire_auth_month"
+                          :options="desire_auth_month_options"
+                          :class="{ 'is-invalid': form.errors.has('desire_auth_month') }"></b-form-select>
+                      </div>
+                      <div class="col-3">
+                        <b-form-select
+                          :disabled="disabled" 
+                          v-model="form.desire_auth_day"
+                          :options="desire_auth_day_options"
+                          :class="{ 'is-invalid': form.errors.has('desire_auth_day') }"></b-form-select>
+                      </div>
+                    </div>
+                    <div  class="form-row mt-3">
+                      <div class="col-3">
+                        <b-form-select
+                          :disabled="disabled" 
                           v-model="form.desire_start_h"
-                          :options="hour_options"></b-form-select>
-                        <label class="ml-2" for="b-form-select-desire_start_h">時</label>
-                      </b-form>
-                    </div>
-                    <div class="col-3">
-                      <b-form inline>
-                        <b-form-select 
-                          :disabled="disabled"
-                          :class="{ 'is-invalid': form.errors.has('desire_start_m') }"
-                          id="b-form-select-desire_start_m"
+                          :options="desire_start_h_options"
+                          :class="{ 'is-invalid': form.errors.has('desire_start_h') }"></b-form-select>
+                      </div>
+                      <div class="col-3">
+                        <b-form-select
+                          :disabled="disabled" 
                           v-model="form.desire_start_m"
-                          :options="minute_options"></b-form-select>
-                        <label class="ml-2" for="b-form-select-desire_start_m">分～</label>
-                      </b-form>
-                    </div>
-                    <div class="col-3">
-                      <b-form inline>
-                        <b-form-select 
-                          :disabled="disabled"
-                          :class="{ 'is-invalid': form.errors.has('desire_end_h') }"
-                          id="b-form-select-desire_end_h"
+                          :options="desire_start_m_options"
+                          :class="{ 'is-invalid': form.errors.has('desire_start_m') }"></b-form-select>
+                      </div>
+                      <div class="col-3">
+                        <b-form-select
+                          :disabled="disabled" 
                           v-model="form.desire_end_h"
-                          :options="hour_options"></b-form-select>
-                        <label class="ml-2" for="b-form-select-desire_end_h">時</label>
-                      </b-form>
-                    </div>
-                    <div class="col-3">
-                      <b-form inline>
-                        <b-form-select 
-                          :disabled="disabled"
-                          :class="{ 'is-invalid': form.errors.has('desire_end_m') }"
-                          id="b-form-select-desire_end_m "
+                          :options="desire_end_h_options"
+                          :class="{ 'is-invalid': form.errors.has('desire_end_h') }"></b-form-select>
+                      </div>
+                      <div class="col-3">
+                        <b-form-select
+                          :disabled="disabled" 
                           v-model="form.desire_end_m"
-                          :options="minute_options"></b-form-select>
-                        <label class="ml-2" for="b-form-select-desire_end_m">分</label>
-                      </b-form>
+                          :options="desire_end_m_options"
+                          :class="{ 'is-invalid': form.errors.has('desire_end_m') }"></b-form-select>
+                      </div>
                     </div>
                   </div>
+                  <has-error :form="form" field="desire_auth_month" />
+                  <has-error :form="form" field="desire_auth_day" />
                   <has-error :form="form" field="desire_start_h" />
                   <has-error :form="form" field="desire_start_m" />
                   <has-error :form="form" field="desire_end_h" />
@@ -711,13 +714,16 @@
             <textarea :disabled="disabled" v-model="form.note" :class="{ 'is-invalid': form.errors.has('note') }" class="form-control" rows="3" name="note" id="note"></textarea>
             <has-error :form="form" field="note" />
           </div>
-          <div class="mt-5 text-center" v-if="form.confirm">
+          <div class="mt-3 text-center" v-if="form.confirm">
             <v-button :loading="form.busy">確認</v-button>
           </div>
-          <div class="text-center mt-5" v-else>
+          <div class="text-center mt-3" v-else>
             <a @click="back_step()" class="btn btn-main mr-2">戻る</a>
             <v-button :loading="form.busy" id="submitButton">送信</v-button>
           </div>
+          <template v-if="form.errors.any()">
+            <div class="help-block invalid-feedback mt-3" style="display: block;">入力エラーがあります。上にスクロールしてエラー項目に再度入力してください。</div>
+          </template>
         </form>
       </card>
     </div>
@@ -732,6 +738,7 @@ import i18n from '~/plugins/i18n'
 import ZipCode from '~/components/ZipCode'
 import BankCode from '~/components/BankCode'
 import FileUpload from '~/components/FileUpload'
+import BirthDay from '~/components/BirthDay'
 
 export default {
   computed: {
@@ -745,22 +752,22 @@ export default {
       } 
       return []
     },
-    product_cashback_on_check() {
-      if(this.form.product_id) {
-        var product = this.product_options.find(x => x.value == this.form.product_id)
-        if(product.cashback != 1) {
-          this.updateCashback()
-          return false;
-        } else {
-          return true;
-        }
-      }
-      return false
-    },
+    // product_cashback_on_check() {
+    //   if(this.form.product_id) {
+    //     var product = this.product_options.find(x => x.value == this.form.product_id)
+    //     if(product.cashback != 1) {
+    //       this.updateCashback()
+    //       return false;
+    //     } else {
+    //       return true;
+    //     }
+    //   }
+    //   return false
+    // },
   },
 
   components: {
-    ZipCode, BankCode, FileUpload
+    ZipCode, BankCode, FileUpload, BirthDay
   },
 
   metaInfo () {
@@ -794,13 +801,21 @@ export default {
     this.form.commercial_privacy_type = 'NOTRECEIVED'
     this.form.monthly_payment_type = 'ACCOUNT'
     this.form.desire_month = 1
+    this.desire_month_options = Array.from(Array(12).keys()).map((x) => ({ value: x + 1, text: `「${x + 1}月」「${(x + 1) % 12 + 1}月」`}))
+    this.desire_auth_month_options = Array.from(Array(12).keys()).map((x) => ({ value: x + 1, text: `${x + 1}月`}))
+    this.desire_start_h_options = Array.from(Array(7).keys()).map((x) => ({ value: x + 10, text: `${x + 10}時`}))
+    this.desire_start_m_options = Array.from(Array(60).keys()).map((x) => ({ value: x, text: `${x}分~`}))
+    this.desire_end_h_options = Array.from(Array(7).keys()).map((x) => ({ value: x + 10, text: `${x + 10}時`}))
+    this.desire_end_m_options = Array.from(Array(60).keys()).map((x) => ({ value: x, text: `${x}分`}))
+    this.desire_auth_day_options = []
+    
   },
 
   data: () => ({
     title: 'オンライン登録申請',
     loading: true,
     uuid: null,
-    step: 1,
+    step: 2,
     confirm: 0,
     show_errors: false,
     disabled: false,
@@ -839,7 +854,13 @@ export default {
       card_company_type: null,
       card_number: null,
       card_name: null,
-      expiration_date: null
+      expiration_date: null,
+      desire_auth_month: null,
+      desire_auth_day: null,
+      desire_start_h: null,
+      desire_start_m: null,
+      desire_end_h: null,
+      desire_end_m: null,
     }),
     sex_options: {},
     contract_options: {},
@@ -849,10 +870,12 @@ export default {
     deposit_options: [],
     privacies: [],
     pref_options:  [],
-    desire_month_options: [1,2,3,4,5,6,7,8,9,10,11,12],
-    hour_options: [10, 11, 12, 13, 14, 15, 16],
-    minute_options: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59],
+    desire_month_options: [],
+    desire_auth_month_options: [],
+    desire_start_h_options: [],
+    desire_start_m_options: [],
+    desire_end_h_options: [],
+    desire_auth_day_options: [],
   }),
 
   methods: {
@@ -1020,9 +1043,12 @@ export default {
         this.form.addr2 = null
         this.form.receiver_name = null
         this.form.receiver_phone = null
+      } else {
+        this.form.monthly_payment_type = null
+        this.changePayment()
       }
       this.form.product_id = null
-      this.updateCashback()
+      // this.updateCashback()
     },
     changeShippingAddressType() {
       if(this.form.shipping_address_type == 'CURRENT') {
@@ -1086,14 +1112,14 @@ export default {
       this.form.city2 = data.city
       this.form.addr2 = data.addr
     },
-    updateCashback() {
-      this.updateBank()
-      this.updateBranch()
-      this.form.deposit_id = null
-      this.form.account_number = null
-      this.form.deposit_id = null
-      this.form.account_name = null
-    },
+    // updateCashback() {
+    //   this.updateBank()
+    //   this.updateBranch()
+    //   this.form.deposit_id = null
+    //   this.form.account_number = null
+    //   this.form.deposit_id = null
+    //   this.form.account_name = null
+    // },
     updateBank(bank) {
       this.form.bank = bank
       this.form.bank_name = bank ? bank.name : null
@@ -1104,8 +1130,16 @@ export default {
       this.form.branch_name = branch ? branch.name : null
       this.form.branch_code = branch ? branch.code : null
     },
+    updateBirthday(birthday) {
+      this.birthday = birthday
+    },
     updateImage(name, image) {
       this.form[name] = image
+    },
+    init_desire_auth_day_options: function () {
+      const currentYear = new Date().getFullYear()
+      const desire_auth_day_max = new Date(currentYear, this.form.desire_auth_month, 0).getDate();
+      this.desire_auth_day_options = Array.from(Array(desire_auth_day_max).keys()).map((x) => ({ value: x + 1, text: `${x + 1}日`}))
     },
     getTextOfOptions(value, options, value_label = null, text_label = null) {
       if(value_label == null) {
@@ -1203,6 +1237,13 @@ export default {
     },
     changeNumberWithCommas(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    changeMMYY(name) {
+      const x = this.form[name]
+      const index = x.indexOf('/')
+      if(index == -1 && x.length >= 3) {
+        this.form[name] = x.substring(0, 2) + "/" + x.substring(2, x.length)
+      }
     }
   }
 }

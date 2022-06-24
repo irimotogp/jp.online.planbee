@@ -37,13 +37,13 @@ class AgencyRequest extends FormRequest
      */
     public function rules()
     {
-        $cashback_rule = "nullable";
-        if($product_id = $this->input('product_id')) {
-            $product = Product::find($product_id);
-            if($product->cashback == 1) {
-                $cashback_rule = "required";
-            }
-        }
+        $cashback_rule = "required";
+        // if($product_id = $this->input('product_id')) {
+        //     $product = Product::find($product_id);
+        //     if($product->cashback == 1) {
+        //         $cashback_rule = "required";
+        //     }
+        // }
         return [
             'uuid' => 'required',
             'sex_type' => 'required|in:' . implode(",", SexType::ALL_OPTIONS),
@@ -52,7 +52,7 @@ class AgencyRequest extends FormRequest
             'kata_sei' => 'nullable|regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
             'kata_mei' => 'nullable|regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
             'corp_kanji' => 'nullable|required_if:sex_type,' . SexType::CORPORATION,
-            'corp_kata' => 'nullable|regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . SexType::CORPORATION,
+            'corp_kata' => 'nullable|regex:/\A[ｦ-ﾟ()（）]+\z/u|required_if:sex_type,' . SexType::CORPORATION,
             'rep_kanji_sei' => 'nullable|required_if:sex_type,' . SexType::CORPORATION,
             'rep_kanji_mei' => 'nullable|required_if:sex_type,' . SexType::CORPORATION,
             'rep_kata_sei' => 'nullable|regex:/\A[ｦ-ﾟ]+\z/u|required_if:sex_type,' . SexType::CORPORATION,
@@ -80,7 +80,8 @@ class AgencyRequest extends FormRequest
             'receiver_phone' => 'required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
             
             'initial_payment_type'  => 'required|in:' . implode(",", InitialPaymentType::ALL_OPTIONS),
-            'monthly_payment_type' => 'required|in:' . implode(",", MonthlyPaymentType::ALL_OPTIONS),
+            'monthly_payment_type' => 'nullable|in:' . implode(",", MonthlyPaymentType::ALL_OPTIONS) . '|required_if:contract_type,' . implode(",", array_diff(ContractType::ALL_OPTIONS, [ContractType::BULK])),
+            
             'payment_number_type' => 'required_if:monthly_payment_type,' . MonthlyPaymentType::CREDITCARD . '|required_if:initial_payment_type,' . InitialPaymentType::CREDITCARD . '|nullable|in:' . implode(",", PaymentNumberType::ALL_OPTIONS),
             'card_company_type' => 'required_if:monthly_payment_type,' . MonthlyPaymentType::CREDITCARD . '|required_if:initial_payment_type,' . InitialPaymentType::CREDITCARD . '|nullable|in:' . implode(",", CardCompanyType::ALL_OPTIONS),
             'card_number' => 'required_if:monthly_payment_type,' . MonthlyPaymentType::CREDITCARD . '|required_if:initial_payment_type,' . InitialPaymentType::CREDITCARD . '|nullable|numeric|digits:6',
@@ -100,11 +101,13 @@ class AgencyRequest extends FormRequest
             'desire_month' => 'required',
             'desire_contact_type' => 'required|in:' . implode(",", DesireContacType::ALL_OPTIONS),
             'desire_datetime_type' => 'required|in:' . implode(",", DesireDateTimeType::ALL_OPTIONS),
-            'desire_date' => 'nullable|date|required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
-            'desire_start_h' => 'required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
-            'desire_start_m' => 'required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
-            'desire_end_h' => 'required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
-            'desire_end_m' => 'required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
+
+            'desire_auth_month' => 'nullable|numeric|required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
+            'desire_auth_day' => 'nullable|numeric|required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
+            'desire_start_h' => 'nullable|numeric|required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
+            'desire_start_m' => 'nullable|numeric|required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
+            'desire_end_h' => 'nullable|numeric|required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
+            'desire_end_m' => 'nullable|numeric|required_if:desire_datetime_type,' . DesireDateTimeType::SPECIAL,
 
             'product_option_ids' => 'nullable|array', 
             'commercial_privacy_type' => 'required',
@@ -174,7 +177,6 @@ class AgencyRequest extends FormRequest
             'desire_month' => '希望登録月',
             'desire_contact_type' => '本人確認の希望連絡先',
             'desire_datetime_type' => '希望日時形式',
-            'desire_date' => '希望日',
             'commercial_privacy_type' => '「特定商取引法に関する法律」',
         ];
     }
@@ -202,6 +204,7 @@ class AgencyRequest extends FormRequest
             'rep_kanji_mei.required_if' => '代表者名は、必ず入力してください。',
             'rep_kata_sei.required_if' => 'ﾀﾞｲﾋｮｳｼｬｾｲは、必ず入力してください。',
             'rep_kata_mei.required_if' => 'ﾀﾞｲﾋｮｳｼｬﾒｲは、必ず入力してください。',
+            'birthday.date' => '生年月日を選択してください。',
             'city2.required_if' => '住所１（番地まで）は、必ず入力してください。',
 
             'work_place_name.required_if' => '勤務先名は、必ず入力してください。',
@@ -214,11 +217,21 @@ class AgencyRequest extends FormRequest
             // 'card_name.regex' => 'カード名義は、英字（大文字半角）のみを入力してください。',
             'expiration_date.required_if' => '有効期限は、必ず入力してください。',
             'expiration_date.date_format' => '有効期限は、MM/YY形式で入力してください。',
-            'desire_date.required_if' => '日を指定してください。',
+            'monthly_payment_type.in' => '月額料支払方法を指定してください。',
+            'monthly_payment_type.required_if' => '月額料支払方法を指定してください。',
+
+            'desire_auth_month.required_if' => '月を指定してください。',
+            'desire_auth_month.numeric' => '月を指定してください。',
+            'desire_auth_day.required_if' => '日を指定してください。',
+            'desire_auth_day.numeric' => '日を指定してください。',
             'desire_start_h.required_if' => '時～を指定してください。',
+            'desire_start_h.numeric' => '時～を指定してください。',
             'desire_start_m.required_if' => '分～を指定してください。',
+            'desire_start_m.numeric' => '分～を指定してください。',
             'desire_end_h.required_if' => '～時を指定してください。',
+            'desire_end_h.numeric' => '～時を指定してください。',
             'desire_end_m.required_if' => '～分を指定してください。',
+            'desire_end_m.numeric' => '～分を指定してください。',
         ];
     }
     public function withValidator($validator)
