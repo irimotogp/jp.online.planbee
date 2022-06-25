@@ -575,35 +575,38 @@
                           :class="{ 'is-invalid': form.errors.has('desire_auth_day') }"></b-form-select>
                       </div>
                     </div>
-                    <div  class="form-row mt-3">
-                      <div class="col-3">
+                    <div class="form-row mt-3">
+                      <b-col class="flex-grow-1">
                         <b-form-select
                           :disabled="disabled" 
                           v-model="form.desire_start_h"
                           :options="desire_start_h_options"
                           :class="{ 'is-invalid': form.errors.has('desire_start_h') }"></b-form-select>
-                      </div>
-                      <div class="col-3">
+                      </b-col>
+                      <b-col class="flex-grow-1">
                         <b-form-select
                           :disabled="disabled" 
                           v-model="form.desire_start_m"
                           :options="desire_start_m_options"
                           :class="{ 'is-invalid': form.errors.has('desire_start_m') }"></b-form-select>
-                      </div>
-                      <div class="col-3">
+                      </b-col>
+                      <b-col class="flex-grow-0">
+                        <label>~</label>
+                      </b-col>
+                      <b-col class="flex-grow-1">
                         <b-form-select
                           :disabled="disabled" 
                           v-model="form.desire_end_h"
                           :options="desire_end_h_options"
                           :class="{ 'is-invalid': form.errors.has('desire_end_h') }"></b-form-select>
-                      </div>
-                      <div class="col-3">
+                      </b-col>
+                      <b-col class="flex-grow-1">
                         <b-form-select
                           :disabled="disabled" 
                           v-model="form.desire_end_m"
                           :options="desire_end_m_options"
                           :class="{ 'is-invalid': form.errors.has('desire_end_m') }"></b-form-select>
-                      </div>
+                      </b-col>
                     </div>
                   </div>
                   <has-error :form="form" field="desire_auth_month" />
@@ -774,11 +777,13 @@ export default {
     this.form.desire_datetime_type = 'ALL'
     this.form.basic_fee_type = 'REFUSE'
     this.form.monthly_payment_type = 'ACCOUNT'
-    this.form.desire_month = 1    
-    this.desire_month_options = Array.from(Array(12).keys()).map((x) => ({ value: x + 1, text: `「${x + 1}月」「${(x + 1) % 12 + 1}月」`}))
+    this.form.desire_month = 1
+
+    const curretMonth = (new Date()).getMonth();
+    this.desire_month_options = Array.from(Array(2).keys()).map((x) => ({ value: x + curretMonth, text: `「${(x + curretMonth - 1) % 12 + 1}月」`}))
     this.desire_auth_month_options = Array.from(Array(12).keys()).map((x) => ({ value: x + 1, text: `${x + 1}月`}))
     this.desire_start_h_options = Array.from(Array(7).keys()).map((x) => ({ value: x + 10, text: `${x + 10}時`}))
-    this.desire_start_m_options = Array.from(Array(60).keys()).map((x) => ({ value: x, text: `${x}分~`}))
+    this.desire_start_m_options = Array.from(Array(60).keys()).map((x) => ({ value: x, text: `${x}分`}))
     this.desire_end_h_options = Array.from(Array(7).keys()).map((x) => ({ value: x + 10, text: `${x + 10}時`}))
     this.desire_end_m_options = Array.from(Array(60).keys()).map((x) => ({ value: x, text: `${x}分`}))
     this.desire_auth_day_options = []
@@ -1042,11 +1047,17 @@ export default {
     },
     changeDesireDateTimeType() {
       if(this.form.desire_datetime_type != 'SPECIAL') {
-        this.form.desire_date = null
+        this.form.desire_auth_month = null
+        this.form.desire_auth_day = null
         this.form.desire_start_h = null
         this.form.desire_start_m = null
         this.form.desire_end_h = null
         this.form.desire_end_m = null
+      } else {
+        const date = new Date();
+        this.form.desire_auth_month = date.getMonth() + 1
+        this.init_desire_auth_day_options()
+        this.form.desire_auth_day = date.getDate()
       }
     },
     changeProduct() {
