@@ -158,7 +158,7 @@ class AgencyCrudController extends CrudController
         $this->crud->addColumn([
             'label'     => '勤務先',
             'type'      => 'text',
-            'name'      => 'work_place_name'
+            'name'      => 'work_place'
         ]);
 
         $this->crud->addColumn([
@@ -196,12 +196,6 @@ class AgencyCrudController extends CrudController
         $this->crud->addColumn([
             'label'     => 'H携帯番号',
             'type'      => 'text',
-        ]);
-
-        $this->crud->addColumn([
-            'label'     => 'ｶｰﾄﾞ会社',
-            'type'      => 'text',
-            'name'      => 'receiver_phone'
         ]);
 
         $this->crud->addColumn([
@@ -317,7 +311,9 @@ class AgencyCrudController extends CrudController
         ]);
         $this->crud->addColumn([
             'label'     => '初回入金法',
-            'type'      => 'text',
+            'type'      => 'select_from_array',
+            'name'      => 'initial_payment_type',
+            'options'   => \App\Enums\InitialPaymentType::getLabelValues(),
         ]);
 
         $this->crud->addColumn([
@@ -331,8 +327,9 @@ class AgencyCrudController extends CrudController
         ]);
         $this->crud->addColumn([
             'label'     => '継続入金法',
-            'type'      => 'text',
-            'name'      => 'continue_payment_law_text'
+            'type'      => 'select_from_array',
+            'name'      => 'monthly_payment_type',
+            'options'   => \App\Enums\MonthlyPaymentType::getAdminValues(),
         ]);
         $this->crud->addColumn([
             'label'     => 'BN相殺',

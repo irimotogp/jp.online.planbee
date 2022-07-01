@@ -235,7 +235,7 @@ export default {
           confirmButtonText: i18n.t('閉じる'),
           cancelButtonText: i18n.t('cancel')
         }).then((result) => {
-          window.location.reload();
+          this.$router.push({ name: 'thanks_i' })
         })
       } catch(e) {
         console.log(e);

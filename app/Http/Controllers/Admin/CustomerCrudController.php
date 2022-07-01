@@ -8,6 +8,8 @@ use App\Enums\SexType;
 use App\Enums\ContractType;
 use App\Enums\DepositType;
 use App\Enums\ShippingAddressType;
+use App\Enums\MonthlyPaymentTypeMonthlyPaymentType;
+
 /**
  * Class CustomerCrudController
  * @package App\Http\Controllers\Admin
@@ -195,13 +197,6 @@ class CustomerCrudController extends CrudController
             'label'     => 'H携帯番号',
             'type'      => 'text',
         ]);
-
-        $this->crud->addColumn([
-            'label'     => 'ｶｰﾄﾞ会社',
-            'type'      => 'text',
-            'name'      => 'receiver_phone'
-        ]);
-
         $this->crud->addColumn([
             'label' => 'ｶｰﾄﾞ会社',
             'type' => 'select_from_array',
@@ -313,7 +308,9 @@ class CustomerCrudController extends CrudController
         ]);
         $this->crud->addColumn([
             'label'     => '初回入金法',
-            'type'      => 'text',
+            'type'      => 'select_from_array',
+            'name'      => 'initial_payment_type',
+            'options'   => \App\Enums\InitialPaymentType::getLabelValues(),
         ]);
 
         $this->crud->addColumn([
@@ -327,8 +324,9 @@ class CustomerCrudController extends CrudController
         ]);
         $this->crud->addColumn([
             'label'     => '継続入金法',
-            'type'      => 'text',
-            'name'      => 'continue_payment_law_text'
+            'type'      => 'select_from_array',
+            'name'      => 'monthly_payment_type',
+            'options'   => \App\Enums\MonthlyPaymentType::getAdminValues(),
         ]);
         $this->crud->addColumn([
             'label'     => 'BN相殺',

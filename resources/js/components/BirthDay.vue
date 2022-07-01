@@ -3,7 +3,7 @@
     <label class="col-md-4 col-form-label text-md-right">{{ label }}<span v-if="need" class="col-form-mark">必須</span></label>
     <div class="col-md-8">
       <div :class="{ 'is-invalid': form.errors.has(name) }" class="mt-2 form-row">
-        <div class="col-8">
+        <div class="col-12 col-md-8 mb-2 mb-md-0">
           <b-form-select
             @change="init_day_options"
             :disabled="disabled" 
@@ -11,7 +11,7 @@
             :options="year_options"
             :class="{ 'is-invalid': form.errors.has(name) }"></b-form-select>
         </div>
-        <div class="col-2">
+        <div class="col-6 col-md-2">
           <b-form-select
             @change="init_day_options"
             :disabled="disabled" 
@@ -19,7 +19,7 @@
             :options="month_options"
             :class="{ 'is-invalid': form.errors.has(name) }"></b-form-select>
         </div>
-        <div class="col-2">
+        <div class="col-6 col-md-2">
           <b-form-select
             @change="updateParent"
             :disabled="disabled" 
@@ -64,15 +64,17 @@ export default {
   methods: {
     // 日の最大数を取得
     init_day_options: function () {
-      const max_days = new Date(this.year, this.month, 0).getDate();
+      const max_days = new Date(this.year, this.month, 0).getDate()
+      if(max_days < this.day) this.day = 1
       this.day_options = Array.from(Array(max_days).keys()).map((x) => ({ value: x + 1, text: `${x + 1}日`}))
+      this.updateParent()
     },
     init_year_options: function () {
       var obj = this
       this.year_options = Array.from(Array(80).keys()).map((x) => (obj.gengoYear(2011 - x)))
     },
     updateParent: function () {
-      let date = this.year + "-" + this.month + "-" + this.day
+      const date = this.year + "-" + this.to2Digits(this.month) + "-" + this.to2Digits(this.day)
       this.$emit('update', date)
     },
     gengoYear: function (year) {
@@ -89,6 +91,9 @@ export default {
         text: ""
       }
     },
+    to2Digits(value) {
+      return ('0' + value.toString()).slice(-2)
+    }
   }
 }
 </script>

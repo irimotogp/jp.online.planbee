@@ -38,7 +38,7 @@ class IntroducerRequest extends FormRequest
             'eva_name' => '',
             'nth_type' => 'required|in:' . implode(",", NthType::ALL_OPTIONS),
             'isd_type' => 'required|in:' . implode(",", ISDType::ALL_OPTIONS),
-            'isd_id' => 'required_if:isd_type,' . ISDType::DESIGNATE,
+            'isd_id' => 'nullable|numeric|digits:10|required_if:isd_type,' . ISDType::DESIGNATE,
             'isd_name' => 'required_if:isd_type,' . ISDType::DESIGNATE,
             'direction_type' => 'required_if:isd_type,' . ISDType::DESIGNATE . "|nullable|in:" . implode(",", DirectionType::ALL_OPTIONS),
             'weg_type' => 'required|in:' . implode(",", WEGType::ALL_OPTIONS),

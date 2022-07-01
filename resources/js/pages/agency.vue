@@ -191,7 +191,7 @@
           </template>
             
           <birth-day
-            :update="updateBirthday"
+            @update="updateBirthday"
             :form="form"
             :disabled="disabled"
             :need="true"
@@ -806,12 +806,12 @@ export default {
 
     const curretMonth = (new Date()).getMonth() + 1;
     this.form.desire_month = curretMonth
-    this.desire_month_options = Array.from(Array(2).keys()).map((x) => ({ value: x + curretMonth, text: `「${(x + curretMonth - 1) % 12 + 1}月」`}))
+    this.desire_month_options = Array.from(Array(2).keys()).map((x) => ({ value: x + curretMonth, text: `${(x + curretMonth - 1) % 12 + 1}月`}))
     this.desire_auth_month_options = Array.from(Array(12).keys()).map((x) => ({ value: x + 1, text: `${x + 1}月`}))
     this.desire_start_h_options = Array.from(Array(7).keys()).map((x) => ({ value: x + 10, text: `${x + 10}時`}))
-    this.desire_start_m_options = Array.from(Array(60).keys()).map((x) => ({ value: x, text: `${x}分`}))
+    this.desire_start_m_options = Array.from(Array(4).keys()).map((x) => ({ value: x * 15, text: `${x * 15}分`}))
     this.desire_end_h_options = Array.from(Array(7).keys()).map((x) => ({ value: x + 10, text: `${x + 10}時`}))
-    this.desire_end_m_options = Array.from(Array(60).keys()).map((x) => ({ value: x, text: `${x}分`}))
+    this.desire_end_m_options = Array.from(Array(4).keys()).map((x) => ({ value: x * 15, text: `${x * 15}分`}))
     this.desire_auth_day_options = []
   },
 
@@ -865,6 +865,7 @@ export default {
       desire_start_m: null,
       desire_end_h: null,
       desire_end_m: null,
+      account_name: null
     }),
     sex_options: {},
     contract_options: {},
@@ -960,7 +961,7 @@ export default {
             confirmButtonText: i18n.t('閉じる'),
             cancelButtonText: i18n.t('cancel')
           }).then((result) => {
-            this.$router.push({ name: 'index' })
+            this.$router.push({ name: 'thanks_o' })
           })
         } else if(data.status == "confirmed") {
           this.confirm_step();
@@ -983,15 +984,20 @@ export default {
       }
     },
     changeKana(name) {
-      const value = this.form[name]
+      let value = this.form[name]
+      if(value == null) return
       const charDict = {
         zenkaku: [
-          'ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ', 'サ', 'シ', 'ス', 'セ', 'ソ',
-          'タ', 'チ', 'ツ', 'テ', 'ト', 'ナ', 'ニ', 'ヌ', 'ネ', 'ノ', 'ハ', 'ヒ', 'フ', 'ヘ', 'ホ',
-          'マ', 'ミ', 'ム', 'メ', 'モ', 'ヤ', 'ユ', 'ヨ', 'ラ', 'リ', 'ル', 'レ', 'ロ', 'ワ', 'ヲ', 'ン',
-          'ァ', 'ィ', 'ゥ', 'ェ', 'ォ', 'ッ', 'ャ', 'ュ', 'ョ', 'ー', '。', '、', '「', '」',
-          'ガ', 'ギ', 'グ', 'ゲ', 'ゴ', 'ザ', 'ジ', 'ズ', 'ゼ', 'ゾ', 'ダ', 'ヂ', 'ヅ', 'デ', 'ド',
-          'バ', 'ビ', 'ブ', 'ベ', 'ボ', 'パ', 'ピ', 'プ', 'ペ', 'ポ', 'ヴ', 'ヷ', 'ヺ',
+          'ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ'
+          ,'サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト'
+          ,'ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ'
+          ,'マ','ミ','ム','メ','モ','ヤ','ヰ','ユ','ヱ','ヨ'
+          ,'ラ','リ','ル','レ','ロ','ワ','ヲ','ン'
+          ,'ガ','ギ','グ','ゲ','ゴ','ザ','ジ','ズ','ゼ','ゾ'
+          ,'ダ','ヂ','ヅ','デ','ド','バ','ビ','ブ','ベ','ボ'
+          ,'パ','ピ','プ','ペ','ポ'
+          ,'ァ','ィ','ゥ','ェ','ォ','ャ','ュ','ョ','ッ'
+          ,'゛','°','、','。','「','」','ー','・',
           '０', '１', '２', '３', '４', '５', '６', '７', '８', '９',
           'Ａ', 'Ｂ', 'Ｃ', 'Ｄ', 'Ｅ', 'Ｆ', 'Ｇ', 'Ｈ', 'Ｉ', 'Ｊ', 'Ｋ', 'Ｌ', 'Ｍ', 'Ｎ',
           'Ｏ', 'Ｐ', 'Ｑ', 'Ｒ', 'Ｓ', 'Ｔ', 'Ｕ', 'Ｖ', 'Ｗ', 'Ｘ', 'Ｙ', 'Ｚ',
@@ -999,12 +1005,16 @@ export default {
           'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ', 'ｕ', 'ｖ', 'ｗ', 'ｘ', 'ｙ', 'ｚ'
         ],
         hankaku: [
-          'ｱ', 'ｲ', 'ｳ', 'ｴ', 'ｵ', 'ｶ', 'ｷ', 'ｸ', 'ｹ', 'ｺ', 'ｻ', 'ｼ', 'ｽ', 'ｾ', 'ｿ',
-          'ﾀ', 'ﾁ', 'ﾂ', 'ﾃ', 'ﾄ', 'ﾅ', 'ﾆ', 'ﾇ', 'ﾈ', 'ﾉ', 'ﾊ', 'ﾋ', 'ﾌ', 'ﾍ', 'ﾎ',
-          'ﾏ', 'ﾐ', 'ﾑ', 'ﾒ', 'ﾓ', 'ﾔ', 'ﾕ', 'ﾖ', 'ﾗ', 'ﾘ', 'ﾙ', 'ﾚ', 'ﾛ', 'ﾜ', 'ｦ', 'ﾝ',
-          'ｧ', 'ｨ', 'ｩ', 'ｪ', 'ｫ', 'ｯ', 'ｬ', 'ｭ', 'ｮ', 'ｰ', '｡', '､', '｢', '｣',
-          'ｶﾞ', 'ｷﾞ', 'ｸﾞ', 'ｹﾞ', 'ｺﾞ', 'ｻﾞ', 'ｼﾞ', 'ｽﾞ', 'ｾﾞ', 'ｿﾞ', 'ﾀﾞ', 'ﾁﾞ', 'ﾂﾞ', 'ﾃﾞ', 'ﾄﾞ',
-          'ﾊﾞ', 'ﾋﾞ', 'ﾌﾞ', 'ﾍﾞ', 'ﾎﾞ', 'ﾊﾟ', 'ﾋﾟ', 'ﾌﾟ', 'ﾍﾟ', 'ﾎﾟ', 'ｳﾞ', 'ﾜﾞ', 'ｦﾞ',
+          'ｱ','ｲ','ｳ','ｴ','ｵ','ｶ','ｷ','ｸ','ｹ','ｺ'
+          ,'ｻ','ｼ','ｽ','ｾ','ｿ','ﾀ','ﾁ','ﾂ','ﾃ','ﾄ'
+          ,'ﾅ','ﾆ','ﾇ','ﾈ','ﾉ','ﾊ','ﾋ','ﾌ','ﾍ','ﾎ'
+          ,'ﾏ','ﾐ','ﾑ','ﾒ','ﾓ','ﾔ','ｲ','ﾕ','ｴ','ﾖ'
+          ,'ﾗ','ﾘ','ﾙ','ﾚ','ﾛ','ﾜ','ｦ','ﾝ'
+          ,'ｶﾞ','ｷﾞ','ｸﾞ','ｹﾞ','ｺﾞ','ｻﾞ','ｼﾞ','ｽﾞ','ｾﾞ','ｿﾞ'
+          ,'ﾀﾞ','ﾁﾞ','ﾂﾞ','ﾃﾞ','ﾄﾞ','ﾊﾞ','ﾋﾞ','ﾌﾞ','ﾍﾞ','ﾎﾞ'
+          ,'ﾊﾟ','ﾋﾟ','ﾌﾟ','ﾍﾟ','ﾎﾟ'
+          ,'ｧ','ｨ','ｩ','ｪ','ｫ','ｬ','ｭ','ｮ','ｯ'
+          ,'ﾞ','ﾟ','､','｡','｢','｣','ｰ','･',
           '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
           'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
           'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -1014,6 +1024,11 @@ export default {
       }
 
       const regExp = new RegExp(`(${charDict.zenkaku.join('|')})`, 'g')
+
+      value = value.replace(/[\u3041-\u3096]/g, function(s){ // ひらがなー＞カタカナ
+        if(s) return String.fromCharCode(s.charCodeAt(0) + 0x60);
+        return
+      });
 
       const result = value.replace(regExp, match => {
         const index = charDict.zenkaku.indexOf(match)
@@ -1132,16 +1147,18 @@ export default {
     // },
     updateBank(bank) {
       this.form.bank = bank
-      this.form.bank_name = bank ? bank.name : null
+      this.form.bank_name = bank ? bank.kana : null
       this.form.bank_code = bank ? bank.code : null
+      this.changeKana('bank_name')
     },
     updateBranch(branch) {
       this.form.branch = branch
-      this.form.branch_name = branch ? branch.name : null
+      this.form.branch_name = branch ? branch.kana : null
       this.form.branch_code = branch ? branch.code : null
+      this.changeKana('branch_name')
     },
     updateBirthday(birthday) {
-      this.birthday = birthday
+      this.form.birthday = birthday
     },
     updateImage(name, image) {
       this.form[name] = image

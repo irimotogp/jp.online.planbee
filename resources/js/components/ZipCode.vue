@@ -65,22 +65,14 @@ export default {
       let obj = this
       window.ZipApi = function (da){
         if( da.zip.length > 0 ) { 
-          let code, pref, city, area
-          for( let i=0;i<da.zip.length;i++ ){
-            code= da.zip[i].d
-            pref= da.zip[i].p
-            city= da.zip[i].c
-            area= da.zip[i].a
+          let zip = da.zip[0]
+          obj.data.zip= zip.d
+          obj.data.pref= zip.p
+          obj.data.city = zip.c
+          const pref_option = obj.pref_options.find(x => x.value == obj.data.pref)
+          if(pref_option) {
+            obj.data.city = pref_option.text + obj.data.city + zip.a
           }
-          if( da.zip.length == 1 ){
-            obj.data.zip = code
-            obj.data.pref = pref
-            obj.data.city = city + area
-          }
-          else{
-            obj.data.pref = pref
-            obj.data.city = city + area
-          }	
           obj.change()
         }
       }

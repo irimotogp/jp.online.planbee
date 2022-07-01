@@ -11,6 +11,9 @@ use App\Enums\DesireContacType;
 use App\Enums\DesireDateTimeType;
 use App\Enums\BasicFeeType;
 use App\Enums\CommercialPrivacyType;
+use App\Enums\DirectionType;
+use App\Enums\MonthlyPaymentType;
+use App\Enums\PaymentNumberType;
 
 class Agency extends Model
 {
@@ -121,11 +124,12 @@ class Agency extends Model
         'display_type',
         'introducer_type',
         'isd_name_text',
-        'continue_payment_law_text',
         'product_buy_num_text',
         'identity_doc_url',
         'identity_doc2_url',
-        'custom_note'
+        'custom_note',
+        'work_place',
+        'direction_type_text'
     ];
     
     public function introducer() {
@@ -166,6 +170,10 @@ class Agency extends Model
 
     public function getCustomNoteAttribute() {
         $text = "送信日時: " . $this->created_at->format('Y/m/d H:i:s');
+        if($this->payment_number_type) {
+            $payment_number_type_text = PaymentNumberType::getAllValues()[$this->payment_number_type];
+            $text .= "<br>支払回数: {$payment_number_type_text}";
+        }
         $text .= "<br>希望登録月: {$this->desire_month}月";
         if($this->desire_contact_type) {
             $desire_contact_type_text = DesireContacType::getAllValues()[$this->desire_contact_type];
@@ -204,12 +212,22 @@ class Agency extends Model
         return "通常表示";
     }
 
-    public function getContinuePaymentLawTextAttribute() {
-        return "口座振替";
-    }
-
     public function getProductBuyNumTextAttribute() {
         return "1";
+    }
+
+    public function getWorkPlaceAttribute() {
+        if($this->work_place_name || $this->work_place_phone) {
+            return $this->work_place_name . "_" . $this->work_place_phone;
+        }
+        return "";
+    }
+
+    public function getDirectionTypeTextAttribute() {
+        if($direction_type = $this->introducer->direction_type) {
+            return DirectionType::getLabelAllValues()[$direction_type];
+        }
+        return null;
     }
 
     public function getIdentityDocUrlAttribute() {

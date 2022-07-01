@@ -93,6 +93,7 @@ class AgencyController extends Controller
             $data['pref1'] = isset($data['pref1']) ? getTextOfProf($data['pref1']) : null;
             $data['pref2'] = isset($data['pref2']) ? getTextOfProf($data['pref2']) : null;
             $data['introducer_id'] = $introducer->id;
+            $data['account_number'] = isset($data['account_number']) ? substr("0000000" . $data['account_number'], -7) : null;
             $agency = Agency::create($data);
             if(count($request->input('product_option_ids')) > 0) {
                 $agency->product_options()->sync($request->input('product_option_ids'));

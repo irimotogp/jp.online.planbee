@@ -24,6 +24,14 @@ final class MonthlyPaymentType extends Enum
         'CREDITCARD' => self::CREDITCARD, 
     ];
 
+    public static function getAdminValues()
+    {
+        return [
+            self::ACCOUNT     => __(""),
+            self::CREDITCARD   => __("ｸﾚｼﾞｯﾄ"),
+        ];
+    }
+
     public static function getAllValues()
     {
         return [

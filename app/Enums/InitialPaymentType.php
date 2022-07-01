@@ -24,6 +24,14 @@ final class InitialPaymentType extends Enum
         'CREDITCARD' => self::CREDITCARD, 
     ];
 
+    public static function getLabelValues()
+    {
+        return [
+            self::BANK     => __("振込"),
+            self::CREDITCARD   => __(" クレジット"),
+        ];
+    }
+
     public static function getAllValues()
     {
         return [

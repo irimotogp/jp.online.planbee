@@ -94,8 +94,8 @@ class AgencyRequest extends FormRequest
             'branch_name' => $cashback_rule,
             'branch_code' => $cashback_rule,
             'deposit_id' => $cashback_rule . '|exists:deposits,id',
-            'account_number' => $cashback_rule,
-            'account_name' => $cashback_rule,
+            'account_number' => $cashback_rule . '|numeric|digits_between:1,7',
+            'account_name' => $cashback_rule . '|regex:/\A[ｦ-ﾟ()（）]+\z/u',
             'identity_doc' => 'required',
 
             'desire_month' => 'required',

@@ -92,6 +92,7 @@ class CustomerController extends Controller
             $data['pref1'] = isset($data['pref1']) ? getTextOfProf($data['pref1']) : null;
             $data['pref2'] = isset($data['pref2']) ? getTextOfProf($data['pref2']) : null;
             $data['introducer_id'] = $introducer->id;
+            $data['account_number'] = isset($data['account_number']) ? substr("0000000" . $data['account_number'], -7) : null;
             $customer = Customer::create($data);
 
             if(count($request->input('product_option_ids')) > 0) {
