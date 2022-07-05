@@ -472,7 +472,7 @@
           </div>
 
           <div class="mb-3 row">
-            <label class="offset-md-4 col-md-8 col-form-label text-md-left">キャッシュバック口座（レンタル期間3年経過時に初期費用の一部または全部がご指定の口座にキャッシュバックされます）</label>
+            <label class="offset-md-4 col-md-8 col-form-label text-md-left">報酬振込先口座情報（税法・税務上の理由により登録名義以外の口座は指定できません）</label>
           </div>
 
           <bank-code 
