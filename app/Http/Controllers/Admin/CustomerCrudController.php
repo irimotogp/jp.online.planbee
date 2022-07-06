@@ -158,7 +158,7 @@ class CustomerCrudController extends CrudController
         $this->crud->addColumn([
             'label'     => '勤務先',
             'type'      => 'text',
-            'name'      => 'work_place_name'
+            'name'      => 'work_place'
         ]);
 
         $this->crud->addColumn([
