@@ -819,7 +819,7 @@ export default {
     title: 'オンライン登録申請',
     loading: true,
     uuid: null,
-    step: 2,
+    step: 1,
     confirm: 0,
     show_errors: false,
     disabled: false,
