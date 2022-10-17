@@ -33,6 +33,16 @@ $appCss = mix('dist/css/app.css');
 
   <title>{{ config('app.name') }}</title>
   <link rel="stylesheet" href="{{ (str_starts_with($appCss, '//') ? 'http:' : '').$appCss }}">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y2H9HNK1Y7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Y2H9HNK1Y7');
+</script>
+
 </head>
 <body>
   <div id="app"></div>

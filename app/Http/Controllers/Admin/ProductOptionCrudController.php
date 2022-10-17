@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\ProductOptionRequest;
-use Backpack\CRUD\app\Http\Controllers\CrudController;
+use App\Http\Controllers\Admin\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
@@ -26,10 +26,10 @@ class ProductOptionCrudController extends CrudController
      */
     public function setup()
     {
+        parent::setup();
         CRUD::setModel(\App\Models\ProductOption::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/product-option');
         CRUD::setEntityNameStrings('', 'オプション');
-        $this->crud->denyAccess(['show']);
     }
 
     /**
@@ -40,6 +40,7 @@ class ProductOptionCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        parent::setupListOperation();
         $this->crud->addColumn([
             'label'     => 'オプション名',
             'type'      => 'text',
@@ -50,7 +51,6 @@ class ProductOptionCrudController extends CrudController
             'type'      => 'text',
             'name'      => 'price'
         ]);
-        
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:

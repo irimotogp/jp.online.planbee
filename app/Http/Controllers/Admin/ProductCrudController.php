@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\ProductRequest;
-use Backpack\CRUD\app\Http\Controllers\CrudController;
+use App\Http\Controllers\Admin\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Enums\ContractType;
 
@@ -27,10 +27,10 @@ class ProductCrudController extends CrudController
      */
     public function setup()
     {
+        parent::setup();
         CRUD::setModel(\App\Models\Product::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/product');
         CRUD::setEntityNameStrings('', '商品');
-        $this->crud->denyAccess(['show']);
     }
 
     /**
@@ -41,6 +41,7 @@ class ProductCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        parent::setupListOperation();
         $this->crud->disableResponsiveTable();
         $this->crud->addColumn([
             'label'     => 'CODE',

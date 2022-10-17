@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\PrivacyRequest;
+use App\Http\Requests\PdfRequest;
 use App\Http\Controllers\Admin\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class PrivacyCrudController
+ * Class PdfCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class PrivacyCrudController extends CrudController
+class PdfCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -27,9 +27,10 @@ class PrivacyCrudController extends CrudController
     public function setup()
     {
         parent::setup();
-        CRUD::setModel(\App\Models\Privacy::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/privacy');
-        CRUD::setEntityNameStrings('', 'プライバシーポリシー');
+        CRUD::setModel(\App\Models\Pdf::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/pdf');
+        CRUD::setEntityNameStrings('pdf', 'pdfs');
+        $this->crud->denyAccess(['create', 'delete']);
     }
 
     /**
@@ -40,19 +41,19 @@ class PrivacyCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        parent::setupListOperation();
         $this->crud->addColumn([
-            'label' => 'タイプ',
-            'type' => 'select_from_array',
-            'name' => 'introducer_type',
-            'options' => \App\Enums\IntroducerType::getAllValues(),
+            'label'     => 'タイプ',
+            'type'      => 'select_from_array',
+            'name'      => 'introducer_type',
+            'options'   => \App\Enums\IntroducerType::getFrontAllValues(),
         ]);
+        
         $this->crud->addColumn([
-            'label'     => 'タイトル',
-            'type'      => 'text',
-            'name'      => 'title', 
+            'label' => "PDFファイル",
+            'name' => "file",
+            'type' => 'text',
+            'limit' => 100
         ]);
-
         /**
          * Columns can be defined using the fluent syntax or array syntax:
          * - CRUD::column('price')->type('number');
@@ -68,19 +69,21 @@ class PrivacyCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(PrivacyRequest::class);
+        CRUD::setValidation(PdfRequest::class);
 
         $this->crud->addField([
-            'label' => 'タイプ',
-            'type' => 'select_from_array',
-            'name' => 'introducer_type',
-            'options' => \App\Enums\IntroducerType::getAllValues(),
+            'label'     => 'タイプ',
+            'type'      => 'select_from_array',
+            'name'      => 'introducer_type',
+            'options'   => \App\Enums\IntroducerType::getFrontAllValues(),
         ]);
+        
         $this->crud->addField([
-            'label'     => 'タイトル',
-            'type'      => 'text',
-            'name'      => 'title', 
-        ]);
+            'label' => "PDFファイル",
+            'name' => "file",
+            'type' => 'upload',
+            'upload'    => true,
+        ], 'both');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

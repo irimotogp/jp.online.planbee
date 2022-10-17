@@ -26,6 +26,13 @@ class UserSeeder extends Seeder
                 'password'=>\Hash::make('qweqweqwe'),
                 'created_at'     => Carbon::now()->subWeek(1),
                 'updated_at'     => Carbon::now()->subWeek(1),
+            ],
+            [
+                'name' => "閲覧者1",
+                'email'=> "guest1@gmail.com",
+                'password'=>\Hash::make('qweqweqwe'),
+                'created_at'     => Carbon::now()->subWeek(1),
+                'updated_at'     => Carbon::now()->subWeek(1),
             ]
         ]);
 

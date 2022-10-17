@@ -185,7 +185,7 @@ export default {
   middleware: 'guest',
 
   metaInfo () {
-    return { title: "取次店の画面" }
+    return { title: "紹介取次店用画面 (STEP1)" }
   },
   
   created () {
@@ -202,7 +202,7 @@ export default {
   },
 
   data: () => ({
-    title: "取次店の画面",
+    title: "紹介取次店用画面 (STEP1)",
     form: new Form({
       sinsei_name: null,
       sinsei_email: null,

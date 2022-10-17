@@ -7,6 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+use App\Enums\IntroducerType;
+use App\Models\Pdf;
+
 class ToRegister extends Mailable
 {
     use Queueable, SerializesModels;
@@ -29,7 +32,12 @@ class ToRegister extends Mailable
      */
     public function build()
     {
-        return $this->subject('登録申請が完了しました')
-            ->markdown('mails.customer.ToRegister');
+        $pdf = Pdf::where('introducer_type', IntroducerType::CUSTOMER)->first();
+        $email = $this->subject('登録申請が完了しました')
+        ->markdown('mails.customer.ToRegister');
+        if($pdf && $pdf->file) {
+            $email->attach($pdf->file);
+        }
+        return $email;
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\ProductFieldRequest;
-use Backpack\CRUD\app\Http\Controllers\CrudController;
+use App\Http\Controllers\Admin\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
@@ -26,10 +26,10 @@ class ProductFieldCrudController extends CrudController
      */
     public function setup()
     {
+        parent::setup();
         CRUD::setModel(\App\Models\ProductField::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/product-field');
         CRUD::setEntityNameStrings('', '分野');
-        $this->crud->denyAccess(['show']);
     }
 
     /**
@@ -40,6 +40,7 @@ class ProductFieldCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        parent::setupListOperation();
         $this->crud->addColumn([
             'label'     => '分野名',
             'type'      => 'text',

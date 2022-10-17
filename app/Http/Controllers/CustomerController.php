@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 use App\Http\Requests\CustomerRequest;
 use App\Enums\IntroducerType;
@@ -79,6 +80,9 @@ class CustomerController extends Controller
     public function register(CustomerRequest $request) {
         \DB::beginTransaction();
         try {        
+            $validator = $request->validate([
+                'uuid' => 'required',
+            ]);
             if($request->input('confirm', false)) {
                 return response()->json(['status' => 'confirmed']);
             }

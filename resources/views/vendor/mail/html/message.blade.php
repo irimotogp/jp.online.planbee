@@ -21,7 +21,8 @@
 {{-- Footer --}}
 @slot('footer')
 @component('mail::footer')
-© {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
+<p><img src="https://online.planbee.co.jp/planbee_maillogo.png"></p>
+© {{ date('Y') }} 株式会社プランビー - PlanBee. @lang('All rights reserved.')
 @endcomponent
 @endslot
 @endcomponent

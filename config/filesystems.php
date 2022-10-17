@@ -84,5 +84,5 @@ return [
     
     'image_upload_path' => 'uploads/image',
     'profile_upload_path' => 'uploads/profile',
-
+    'file_upload_path' => 'uploads/file',
 ];

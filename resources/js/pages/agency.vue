@@ -473,6 +473,7 @@
 
           <div class="mb-3 row">
             <label class="offset-md-4 col-md-8 col-form-label text-md-left">報酬振込先口座情報（税法・税務上の理由により登録名義以外の口座は指定できません）</label>
+            <label class="offset-md-4 col-md-8 col-form-label text-md-left"><span class="col-form-desc">銀行・支店名検索で使用出来る文字は全角カタカナのみです（例）ゆうちょ→ユウチヨ</span></label>
           </div>
 
           <bank-code 
@@ -774,7 +775,7 @@ export default {
   },
 
   metaInfo () {
-    return { title: 'オンライン登録申請' }
+    return { title: 'オンライン登録申請 (STEP2)' }
   },
 
   created () {
@@ -816,7 +817,7 @@ export default {
   },
 
   data: () => ({
-    title: 'オンライン登録申請',
+    title: 'オンライン登録申請 (STEP2)',
     loading: true,
     uuid: null,
     step: 1,
@@ -956,7 +957,7 @@ export default {
           Swal.fire({
             type: 'success',
             title: "",
-            text: `${this.title}が登録されました。`,
+            text: `${this.title}が送信されました。`,
             reverseButtons: true,
             confirmButtonText: i18n.t('閉じる'),
             cancelButtonText: i18n.t('cancel')

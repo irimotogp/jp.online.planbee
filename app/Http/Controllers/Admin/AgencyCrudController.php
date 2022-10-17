@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\AgencyRequest;
-use Backpack\CRUD\app\Http\Controllers\CrudController;
+use App\Http\Controllers\Admin\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Enums\SexType;
 use App\Enums\ContractType;
 use App\Enums\DepositType;
 use App\Enums\ShippingAddressType;
+use App\Enums\IntroducerType;
 
 /**
  * Class AgencyCrudController
@@ -30,10 +31,10 @@ class AgencyCrudController extends CrudController
      */
     public function setup()
     {
+        parent::setup();
         CRUD::setModel(\App\Models\Agency::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/agency');
         CRUD::setEntityNameStrings('', 'オンライン登録申請');
-        $this->crud->denyAccess(['show', 'create', 'delete', 'update']);
         $this->crud->enableExportButtons();
     }
 
@@ -45,6 +46,7 @@ class AgencyCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        parent::setupListOperation();
         $this->crud->disableResponsiveTable();
         $this->crud->addColumn([
             'label'     => '会員ID',
@@ -498,7 +500,389 @@ class AgencyCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(AgencyRequest::class);
+        CRUD::setValidation(AgencyRequest::class);        $prefs_list = [];
+        foreach (config('values.prefs') as $item) {
+            $prefs_list[$item['text']] = $item['text'];
+        }
+        $this->crud->addField([
+            'type' => 'hidden',
+            'name' => 'agree', 
+            'default' => 1
+        ]);
+        $this->crud->addField([
+            'label' => '性別',
+            'type' => 'select_from_array',
+            'name' => 'sex_type',
+            'options' => \App\Enums\SexType::getAllValues(),
+        ]);
+        $this->crud->addField([
+            'label'     => '氏名姓',
+            'type'      => 'text',
+            'name'      => 'kanji_sei'
+        ]);
+        $this->crud->addField([
+            'label'     => '氏名名',
+            'type'      => 'text',
+            'name'      => 'kanji_mei'
+        ]);
+        $this->crud->addField([
+            'label'     => '氏名ｾｲ',
+            'type'      => 'text',
+            'name'      => 'kata_sei'
+        ]);
+        $this->crud->addField([
+            'label'     => '氏名メイ',
+            'type'      => 'text',
+            'name'      => 'kata_mei'
+        ]);
+        $this->crud->addField([
+            'label'     => '法人名',
+            'type'      => 'text',
+            'name'      => 'corp_kanji'
+        ]);
+        $this->crud->addField([
+            'label'     => '法人名ﾎｳｼﾞﾝﾒｲ',
+            'type'      => 'text',
+            'name'      => 'corp_kata'
+        ]);
+        $this->crud->addField([
+            'label'     => '代表者姓',
+            'type'      => 'text',
+            'name'      => 'rep_kanji_sei'
+        ]);
+        $this->crud->addField([
+            'label'     => '代表者名',
+            'type'      => 'text',
+            'name'      => 'rep_kanji_mei'
+        ]);
+        $this->crud->addField([
+            'label'     => '代表者ｾｲ',
+            'type'      => 'text',
+            'name'      => 'rep_kata_sei'
+        ]);
+        $this->crud->addField([
+            'label'     => '代表者ﾒｲ',
+            'type'      => 'text',
+            'name'      => 'rep_kata_mei'
+        ]);
+        $this->crud->addField([
+            'label'     => '生年月日',
+            'type'      => 'date',
+            'name'      => 'birthday',
+            'format' => 'YYYY/MM/DD'
+        ]);
+        $this->crud->addField([
+            'label'     => '郵便番号',
+            'type'      => 'text',
+            'name'      => 'zip1'
+        ]);
+        $this->crud->addField([
+            'label'     => '都道府県',
+            'type'      => 'select_from_array',
+            'name'      => 'pref1',
+            'options'   =>  $prefs_list
+        ]);
+        $this->crud->addField([
+            'label'     => '住所１',
+            'type'      => 'text',
+            'name'      => 'city1'
+        ]);
+        $this->crud->addField([
+            'label'     => '住所２',
+            'type'      => 'text',
+            'name'      => 'addr1'
+        ]);
+        $this->crud->addField([
+            'label'     => '電話番号',
+            'type'      => 'text',
+            'name'      => 'home_phone'
+        ]);
+        $this->crud->addField([
+            'label'     => 'FAX番号',
+            'type'      => 'text',
+            'name'      => 'fax'
+        ]);
+        $this->crud->addField([
+            'label'     => '携帯電話',
+            'type'      => 'text',
+            'name'      => 'mobile_phone'
+        ]);
+        $this->crud->addField([
+            'label'     => '携帯番号2',
+            'type'      => 'text',
+            'name'      => 'mobile_phone2'
+        ]);
+        $this->crud->addField([
+            'label'     => 'ﾒｰﾙPC',
+            'type'      => 'text',
+            'name'      => 'sinsei_email'
+        ]);
+        $this->crud->addField([
+            'label'     => 'ﾒｰﾙ携帯',
+            'type'      => 'text',
+            'name'      => 'phone_email'
+        ]);
+        $this->crud->addField([
+            'label'     => '勤務先名',
+            'type'      => 'text',
+            'name'      => 'work_place_name'
+        ]);
+        $this->crud->addField([
+            'label'     => '勤務先電話番号',
+            'type'      => 'text',
+            'name'      => 'work_place_phone'
+        ]);
+        $this->crud->addField([
+            'label' => '契約タイプ',
+            'type' => 'select_from_array',
+            'name' => 'contract_type',
+            'options' => \App\Enums\ContractType::getAllValues(),
+        ]);
+        $this->crud->addField([
+            'label'     => 'SUｻﾎﾟｰﾀｰID',
+            'type'      => 'text',
+            'name'      => 'eva_id'
+        ]);
+        $this->crud->addField([
+            'label'     => 'SUｻﾎﾟｰﾀｰ名',
+            'type'      => 'text',
+            'name'      => 'eva_name'
+        ]);
+        $this->crud->addField([
+            'label' => '発送先指定',
+            'type' => 'select_from_array',
+            'name' => 'shipping_address_type',
+            'options' => \App\Enums\ShippingAddressType::getAllValues(),
+        ]);
+        $this->crud->addField([
+            'label'     => '紹介者ID',
+            'type'      => 'text',
+            'name'      => 'syoukai_id'
+        ]);
+        $this->crud->addField([
+            'label'     => '紹介者名',
+            'type'      => 'text',
+            'name'      => 'syoukai_name'
+        ]);
+        $this->crud->addField([
+            'label'     => 'H郵便番号',
+            'type'      => 'text',
+            'name'      => 'zip2'
+        ]);
+        $this->crud->addField([
+            'label'     => 'H都道府県',
+            'type'      => 'select_from_array',
+            'name'      => 'pref2',
+            'options'   =>  $prefs_list
+        ]);
+        $this->crud->addField([
+            'label'     => 'H住所1',
+            'type'      => 'text',
+            'name'      => 'city2'
+        ]);
+        $this->crud->addField([
+            'label'     => 'H住所2',
+            'type'      => 'text',
+            'name'      => 'addr2'
+        ]);
+        $this->crud->addField([
+            'label'     => 'H宛名',
+            'type'      => 'text',
+            'name'      => 'receiver_name'
+        ]);
+        $this->crud->addField([
+            'label'     => 'H電話番号',
+            'type'      => 'text',
+            'name'      => 'receiver_phone'
+        ]);
+        $this->crud->addField([
+            'label'     => '初回入金法',
+            'type'      => 'select_from_array',
+            'name'      => 'initial_payment_type',
+            'options'   => \App\Enums\InitialPaymentType::getLabelValues(),
+        ]);
+        $this->crud->addField([
+            'label'     => '支払い回数',
+            'type'      => 'select_from_array',
+            'name'      => 'payment_number_type',
+            'options'   => \App\Enums\PaymentNumberType::getAllValues(),
+        ]);
+        $this->crud->addField([
+            'label' => 'ｶｰﾄﾞ会社',
+            'type' => 'select_from_array',
+            'name' => 'card_company_type',
+            'options' => \App\Enums\CardCompanyType::getAllValues(),
+        ]);
+        $this->crud->addField([
+            'label'     => 'ｶｰﾄﾞ番号',
+            'type'      => 'text',
+            'name'      => 'card_number'
+        ]);
+        $this->crud->addField([
+            'label'     => 'ｶｰﾄﾞ名義',
+            'type'      => 'text',
+            'name'      => 'card_name'
+        ]);
+        $this->crud->addField([
+            'label'     => '有効期限',
+            'type'      => 'text',
+            'name'      => 'expiration_date'
+        ]);
+        $this->crud->addField([
+            'label'     => '継続入金法',
+            'type'      => 'select_from_array',
+            'name'      => 'monthly_payment_type',
+            'options'   => \App\Enums\MonthlyPaymentType::getAdminValues(),
+        ]);
+        $this->crud->addField([
+            'label' => '購入商品',
+            'type'  => 'select',
+            'name' => 'product_id',
+            'attribute' => 'display_name',
+            'key' => 'display_name',
+            'entity' => 'product',
+            'model' => "App\Models\Product",
+            // also optional
+           'options'   => (function ($query) {
+                return $query->whereIn('introducer_type', [IntroducerType::AGENCY, IntroducerType::ALL])->get();
+            }),
+        ]);
+        $this->crud->addField([
+            'label'     => '銀行名',
+            'type'      => 'text',
+            'name'      => 'bank_name'
+        ]);
+        $this->crud->addField([
+            'label'     => '銀行ｺｰﾄﾞ',
+            'type'      => 'text',
+            'name'      => 'bank_code'
+        ]);
+        $this->crud->addField([
+            'label'     => '支店名',
+            'type'      => 'text',
+            'name'      => 'branch_name'
+        ]);
+        $this->crud->addField([
+            'label'     => '支店ｺｰﾄﾞ',
+            'type'      => 'text',
+            'name'      => 'branch_code'
+        ]);
+        $this->crud->addField([
+            'label'     => '預金種目',
+            'type'      => 'select',
+            'name'      => 'deposit_id',
+            'attribute' => 'name',
+            'entity'    => 'deposit',
+            'model'     => "App\Models\Deposit",
+        ]);
+        $this->crud->addField([
+            'label'     => '口座番号',
+            'type'      => 'text',
+            'name'      => 'account_number'
+        ]);
+        $this->crud->addField([
+            'label'     => '口座名義（ｶﾅ）',
+            'type'      => 'text',
+            'name'      => 'account_name'
+        ]);
+        $this->crud->addField([
+            'label' => "本人確認書類",
+            'name' => "identity_doc",
+            'type' => 'image',
+        ]);
+        $this->crud->addField([
+            'label' => "本人確認書類",
+            'name' => "identity_doc2",
+            'type' => 'image',
+        ]);
+        $this->crud->addField([
+            'label'     => '希望登録月',
+            'type'      => 'number',
+            'name'      => 'desire_month'
+        ]);
+        $this->crud->addField([
+            'label'     => '本人確認の希望連絡先',
+            'type'      => 'select_from_array',
+            'name'      => 'desire_contact_type',
+            'options'      => \App\Enums\DesireContacType::getAllValues(),
+        ]);
+        $this->crud->addField([
+            'label'     => '希望日時',
+            'type'      => 'select_from_array',
+            'name'      => 'desire_datetime_type',
+            'options'      => \App\Enums\DesireDateTimeType::getAllValues(),
+        ]);
+        $this->crud->addField([
+            'label'     => '月',
+            'type'      => 'select_from_array',
+            'name'      => 'desire_auth_month',
+            'options'   => mapWithKeys(range(1,12))
+        ]);
+        $this->crud->addField([
+            'label'     => '日',
+            'type'      => 'select_from_array',
+            'name'      => 'desire_auth_day',
+            'options'   => mapWithKeys(range(10,31))
+        ]);
+        $this->crud->addField([
+            'label'     => '時～',
+            'type'      => 'select_from_array',
+            'name'      => 'desire_start_h',
+            'options'   => mapWithKeys(range(10,16))
+        ]);
+        $this->crud->addField([
+            'label'     => '分～',
+            'type'      => 'select_from_array',
+            'name'      => 'desire_start_m',
+            'options'   => mapWithKeys(range(0,45,15))
+        ]);
+        $this->crud->addField([
+            'label'     => '～時',
+            'type'      => 'select_from_array',
+            'name'      => 'desire_end_h',
+            'options'   => mapWithKeys(range(10,16))
+        ]);
+        $this->crud->addField([
+            'label'     => '～分',
+            'type'      => 'select_from_array',
+            'name'      => 'desire_end_m',
+            'options'   => mapWithKeys(range(0,45,15))
+        ]);
+        $this->crud->addField([
+            'label'     => 'オプション品',
+            'type'      => 'relationship',
+            'name'      => 'product_options',
+            'attribute' => 'name',
+            'entity'    => 'product_options',
+            'model'     => "App\Models\ProductOption",
+        ]);
+        $this->crud->addField([
+            'label'     => '基本取付工賃（13,200円）',
+            'type'      => 'select_from_array',
+            'name'      => 'basic_fee_type',
+            'options'      => \App\Enums\BasicFeeType::getAllValues(),
+        ]);
+        $this->crud->addField([
+            'label'     => '初期費用合計金額',
+            'type'      => 'text',
+            'name'      => 'initial_price'
+        ]);
+        $this->crud->addField([
+            'label'     => '月額料',
+            'type'      => 'text',
+            'name'      => 'month_price'
+        ]);
+        $this->crud->addField([
+            'label'     => '特定商取引法に関する法律）',
+            'type'      => 'select_from_array',
+            'name'      => 'commercial_privacy_type',
+            'options'      => \App\Enums\CommercialPrivacyType::getAllValues(),
+        ]);
+        $this->crud->addField([
+            'label'     => '備考',
+            'type'      => 'text',
+            'name'      => 'note'
+        ]);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

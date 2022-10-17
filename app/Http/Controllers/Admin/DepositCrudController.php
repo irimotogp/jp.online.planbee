@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\DepositRequest;
-use Backpack\CRUD\app\Http\Controllers\CrudController;
+use App\Http\Controllers\Admin\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
@@ -26,10 +26,10 @@ class DepositCrudController extends CrudController
      */
     public function setup()
     {
+        parent::setup();
         CRUD::setModel(\App\Models\Deposit::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/deposit');
         CRUD::setEntityNameStrings('', '預金種目');
-        $this->crud->denyAccess(['show']);
     }
 
     /**
@@ -40,6 +40,7 @@ class DepositCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        parent::setupListOperation();
         $this->crud->addColumn([
             'label'     => '預金種目名',
             'type'      => 'text',

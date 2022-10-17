@@ -457,6 +457,7 @@
           <template v-if="product_cashback_on_check">
             <div class="mb-3 row">
               <label class="offset-md-4 col-md-8 col-form-label text-md-left">キャッシュバック口座（レンタル期間3年経過時に初期費用の一部または全部がご指定の口座にキャッシュバックされます）</label>
+              <label class="offset-md-4 col-md-8 col-form-label text-md-left"><span class="col-form-desc">銀行・支店名検索で使用出来る文字は全角カタカナのみです（例）ゆうちょ→ユウチヨ</span></label>
             </div>
 
             <bank-code 
@@ -749,7 +750,7 @@ export default {
   },
 
   metaInfo () {
-    return { title: 'オンラインレンタル申し込み' }
+    return { title: 'オンラインレンタル申し込み (STEP2)' }
   },
 
   created () {
@@ -790,7 +791,7 @@ export default {
   },
 
   data: () => ({
-    title: 'オンラインレンタル申し込み',
+    title: 'オンラインレンタル申し込み (STEP2)',
     loading: true,
     uuid: null,
     step: 1,
@@ -928,7 +929,7 @@ export default {
           Swal.fire({
             type: 'success',
             title: "",
-            text: `${this.title}が登録されました。`,
+            text: `${this.title}が送信されました。`,
             reverseButtons: true,
             confirmButtonText: i18n.t('閉じる'),
             cancelButtonText: i18n.t('cancel')

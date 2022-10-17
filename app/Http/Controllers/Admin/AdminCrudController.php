@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
-use Backpack\CRUD\app\Http\Controllers\CrudController;
+use App\Http\Controllers\Admin\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\User;
 
@@ -28,10 +28,10 @@ class AdminCrudController extends CrudController
      */
     public function setup()
     {
+        parent::setup();
         CRUD::setModel(User::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/admin');
-        CRUD::setEntityNameStrings('', 'ユーザー');
-        $this->crud->denyAccess('show');
+        CRUD::setEntityNameStrings('', '管理者');
     }
 
     /**
@@ -42,19 +42,8 @@ class AdminCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        parent::setupListOperation();
         $user = backpack_user();
-
-        $this->crud->addColumn([
-            'label'     => 'プロフィール画像',
-            'name'      => 'image', 
-            'type'      => 'image',
-        ]);
-
-        $this->crud->addColumn([
-            'label' => '名前111',
-            'type' => 'text',
-            'name' => 'name'
-        ]);
 
         $this->crud->addColumn([
             'label' => '名前',
@@ -97,17 +86,6 @@ class AdminCrudController extends CrudController
 
         CRUD::setValidation(UserCreateRequest::class);
 
-        // image
-        $this->crud->addField([
-            'label' => "プロフィール画像",
-            'name' => "image",
-            'type' => 'image',
-            'crop' => true, // set to true to allow cropping, false to disable
-            'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
-            // 'disk'      => 's3_bucket', // in case you need to show images from a different disk
-            // 'prefix'    => 'uploads/images/profile_pictures/' // in case your db value is only the file name (no path), you can use this to prepend your path to the image src (in HTML), before it's shown to the user;
-        ]);
-
         $this->crud->addField([
             'label' => '名前',
             'type' => 'text',
@@ -124,6 +102,16 @@ class AdminCrudController extends CrudController
             'label' => 'パスワード',
             'type' => 'password',
             'name' => 'password',
+        ]);
+
+        $this->crud->addField([
+            'label'     => '権限',
+            'type'      => 'relationship',
+            'name'      => 'roles',
+            'entity'    => 'roles',
+            'attribute' => 'name',
+            'model'     => "Backpack\PermissionManager\app\Models\Role",
+            // 'pivot'     => true,
         ]);
         
         /**

@@ -36,3 +36,7 @@ function getTextOfProf($value) {
   $prefs = $prefs_collection->pluck('text', 'value')->all();
   return $prefs[$value];
 }
+
+function mapWithKeys($array) {
+  return collect($array)->mapWithKeys(function($x){ return [ $x => $x ]; })->toArray();
+}

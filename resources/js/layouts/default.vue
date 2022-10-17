@@ -7,7 +7,7 @@
         <child />
       </div>
     </div>
-
+            <div style="margin: 0px 0px 45px 0px;" align="center"><img src="https://online.planbee.co.jp/planbee_maillogo.png"></div>
   </div>
 </template>
 

@@ -13,14 +13,14 @@ Route::group([
     'as' => 'admin.'
 ], function () { // custom admin routes
     // CRUD resources and other admin routes
-    Route::group(['middleware' => ['role:super']], function () {
-        Route::crud('agency', 'AgencyCrudController');
-        Route::crud('customer', 'CustomerCrudController');
-        Route::crud('introducer', 'IntroducerCrudController');
-        Route::crud('product', 'ProductCrudController');
-        Route::crud('product-option', 'ProductOptionCrudController');
-        Route::crud('product-field', 'ProductFieldCrudController');
-        Route::crud('deposit', 'DepositCrudController');
-        Route::crud('privacy', 'PrivacyCrudController');
-    });
+    Route::crud('admin', 'AdminCrudController');
+    Route::crud('agency', 'AgencyCrudController');
+    Route::crud('customer', 'CustomerCrudController');
+    Route::crud('introducer', 'IntroducerCrudController');
+    Route::crud('product', 'ProductCrudController');
+    Route::crud('product-option', 'ProductOptionCrudController');
+    Route::crud('product-field', 'ProductFieldCrudController');
+    Route::crud('deposit', 'DepositCrudController');
+    Route::crud('privacy', 'PrivacyCrudController');
+    Route::crud('pdf', 'PdfCrudController');
 }); // this should be the absolute last line of this file

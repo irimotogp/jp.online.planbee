@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+
 use App\Enums\SexType;
 use App\Enums\ContractType;
 use App\Enums\DepositType;
@@ -45,7 +46,6 @@ class AgencyRequest extends FormRequest
         //     }
         // }
         return [
-            'uuid' => 'required',
             'sex_type' => 'required|in:' . implode(",", SexType::ALL_OPTIONS),
             'kanji_sei' => 'nullable|required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
             'kanji_mei' => 'nullable|required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),

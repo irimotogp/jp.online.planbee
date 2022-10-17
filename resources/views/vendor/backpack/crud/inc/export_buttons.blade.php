@@ -21,6 +21,9 @@
                         columns: function ( idx, data, node ) {
                             var $column = crud.table.column( idx );
                                 return  ($column.visible() && $(node).attr('data-visible-in-export') != 'false') || $(node).attr('data-force-export') == 'true';
+                        }, 
+                        rows: function ( idx, data, node ) {
+                            return $(node).find('.crud_bulk_actions_row_checkbox').prop("checked");
                         }
                     },
                     action: function(e, dt, button, config) {
@@ -36,6 +39,9 @@
                         columns: function ( idx, data, node ) {
                             var $column = crud.table.column( idx );
                                 return  ($column.visible() && $(node).attr('data-visible-in-export') != 'false') || $(node).attr('data-force-export') == 'true';
+                        }, 
+                        rows: function ( idx, data, node ) {
+                            return $(node).find('.crud_bulk_actions_row_checkbox').prop("checked");
                         }
                     },
                     action: function(e, dt, button, config) {
@@ -51,6 +57,9 @@
                         columns: function ( idx, data, node ) {
                             var $column = crud.table.column( idx );
                                 return  ($column.visible() && $(node).attr('data-visible-in-export') != 'false') || $(node).attr('data-force-export') == 'true';
+                        }, 
+                        rows: function ( idx, data, node ) {
+                            return $(node).find('.crud_bulk_actions_row_checkbox').prop("checked");
                         }
                     },
                     action: function(e, dt, button, config) {
@@ -66,6 +75,9 @@
                         columns: function ( idx, data, node ) {
                             var $column = crud.table.column( idx );
                                 return  ($column.visible() && $(node).attr('data-visible-in-export') != 'false') || $(node).attr('data-force-export') == 'true';
+                        }, 
+                        rows: function ( idx, data, node ) {
+                            return $(node).find('.crud_bulk_actions_row_checkbox').prop("checked");
                         }
                     },
                     orientation: 'landscape',
@@ -82,6 +94,9 @@
                         columns: function ( idx, data, node ) {
                             var $column = crud.table.column( idx );
                                 return  ($column.visible() && $(node).attr('data-visible-in-export') != 'false') || $(node).attr('data-force-export') == 'true';
+                        }, 
+                        rows: function ( idx, data, node ) {
+                            return $(node).find('.crud_bulk_actions_row_checkbox').prop("checked");
                         }
                     },
                     action: function(e, dt, button, config) {
