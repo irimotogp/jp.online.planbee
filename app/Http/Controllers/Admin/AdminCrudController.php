@@ -123,19 +123,22 @@ class AdminCrudController extends CrudController
 
     protected function handlePasswordInput($request)
     {
-        // Remove fields not present on the user.
-        $request->request->remove('password_confirmation');
-        $request->request->remove('roles_show');
-        $request->request->remove('permissions_show');
+        $crud_request = $this->crud->getRequest();
 
-        // Encrypt password if specified.
+        // If a password was specified
         if ($request->input('password')) {
-            $request->request->set('password', bcrypt($request->input('password')));
+            // encrypt it before storing it
+            $hashed_password = \Hash::make($request->input('password'));
+
+            $crud_request->request->set('password', $hashed_password);
+            $crud_request->request->set('password_confirmation', $hashed_password);
         } else {
-            $request->request->remove('password');
+            // ignore the password inputs entirely
+            $crud_request->request->remove('password');
+            $crud_request->request->remove('password_confirmation');
         }
 
-        return $request;
+        $this->crud->setRequest($crud_request);
     }
 
     /**
@@ -148,5 +151,33 @@ class AdminCrudController extends CrudController
     {
         $this->setupCreateOperation();
         CRUD::setValidation(UserUpdateRequest::class);
+    }
+
+    /**
+     * Store a newly created resource in the database.
+     *
+     * @param StoreRequest $request - type injection used for validation using Requests
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(UserCreateRequest $request)
+    {
+        $this->handlePasswordInput($request);
+
+        return $this->traitStore($request);
+    }
+
+    /**
+     * Update the specified resource in the database.
+     *
+     * @param UpdateRequest $request - type injection used for validation using Requests
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(UserUpdateRequest $request)
+    {
+        $this->handlePasswordInput($request);
+
+        return $this->traitUpdate($request);
     }
 }
