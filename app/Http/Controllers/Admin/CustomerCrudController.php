@@ -48,16 +48,6 @@ class CustomerCrudController extends CrudController
     {
         parent::setupListOperation();
         $this->crud->disableResponsiveTable();
-        $this->crud->enableBulkActions();
-        $this->crud->addColumn([
-            'type'           => 'checkbox',
-            'name'           => 'bulk_actions',
-            'label'          => ' <input type="checkbox" class="crud_bulk_actions_main_checkbox" style="width: 16px; height: 16px;" />',
-            'priority'       => 1,
-            'searchLogic'    => false,
-            'orderable'      => false,
-            'visibleInModal' => false,
-        ])->makeFirstColumn();
         
         $this->crud->addColumn([
             'label'     => '会員ID',

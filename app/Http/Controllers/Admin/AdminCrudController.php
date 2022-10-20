@@ -32,6 +32,7 @@ class AdminCrudController extends CrudController
         CRUD::setModel(User::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/admin');
         CRUD::setEntityNameStrings('', '管理者');
+        $this->crud->allowAccess(['customBulkDelete']);
     }
 
     /**
