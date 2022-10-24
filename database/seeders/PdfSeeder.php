@@ -21,11 +21,11 @@ class PdfSeeder extends Seeder
         \DB::table('pdfs')->insert([
             [
                 'introducer_type' => IntroducerType::AGENCY,
-                'file' => config('filesystems.file_upload_path') . '/none.pdf',
+                'file' => null,
             ],
             [
                 'introducer_type' => IntroducerType::CUSTOMER,
-                'file' => config('filesystems.file_upload_path') . '/none.pdf',
+                'file' => null,
             ]
         ]);
 

@@ -60,22 +60,22 @@ class CustomerRequest extends FormRequest
             'birthday' => 'required|date',
             'zip1' => 'required|max:255',
             'pref1' => 'required|max:255',
-            'city1' => 'required|max:255',
-            'addr1' => 'nullable|max:255',
+            'city1' => 'required|max:30',
+            'addr1' => 'nullable|max:30',
             'home_phone' => 'required|max:255',
             'fax' => 'nullable|max:255',
             'mobile_phone' => 'required|max:255',
             'mobile_phone2' => 'nullable|max:255',
             'sinsei_email' => 'required|email:filter|max:255',
             'phone_email' => 'nullable|email:filter|max:255',
-            'work_place_name' => 'max:255|required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
+            'work_place_name' => 'max:50|required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
             'work_place_phone' => 'max:255|required_if:sex_type,' . implode(",", array_diff(SexType::ALL_OPTIONS, [SexType::CORPORATION])),
             'contract_type' => 'required|in:' . implode(",", ContractType::ALL_OPTIONS),
             'shipping_address_type' => 'nullable|in:' . implode(",", ShippingAddressType::ALL_OPTIONS) . '|required_if:contract_type,' . ContractType::BULK,
             'zip2' => 'max:255|required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
             'pref2' => 'max:255|required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
-            'city2' => 'max:255|required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
-            'addr2' => 'nullable|max:255',
+            'city2' => 'max:30|required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
+            'addr2' => 'nullable|max:30',
             'receiver_name' => 'max:255|required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
             'receiver_phone' => 'max:255|required_if:shipping_address_type,' . implode(",", array_diff(ShippingAddressType::ALL_OPTIONS, [ShippingAddressType::CURRENT])),
             
@@ -110,7 +110,7 @@ class CustomerRequest extends FormRequest
 
             'product_option_ids' => 'nullable|array', 
 
-            'note' => 'nullable|max:16383'
+            'note' => 'nullable|max:1000'
         ];
     }
 

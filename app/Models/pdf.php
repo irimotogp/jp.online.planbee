@@ -29,7 +29,7 @@ class pdf extends Model
     {
         return $value ?
             config('app.url') . '/' . $value :
-            config('app.url') . '/' . config('filesystems.file_upload_path') . '/none.pdf';
+            null;
     }
 
     public function setFileAttribute($value)
