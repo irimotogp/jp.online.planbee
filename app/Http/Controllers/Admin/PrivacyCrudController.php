@@ -29,7 +29,7 @@ class PrivacyCrudController extends CrudController
         parent::setup();
         CRUD::setModel(\App\Models\Privacy::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/privacy');
-        CRUD::setEntityNameStrings('', 'プライバシーポリシー');
+        CRUD::setEntityNameStrings('', '重要事項確認');
     }
 
     /**

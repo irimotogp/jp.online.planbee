@@ -13,5 +13,5 @@
   </ul>
 </li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('deposit') }}'><i class='nav-icon la la-question'></i>預金種目</a></li>
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('privacy') }}'><i class='nav-icon la la-question'></i>プライバシーポリシー</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('privacy') }}'><i class='nav-icon la la-question'></i>重要事項確認</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('pdf') }}'><i class='nav-icon la la-question'></i> Pdfs</a></li>
