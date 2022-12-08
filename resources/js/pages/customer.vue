@@ -781,7 +781,7 @@ export default {
     
     const curretMonth = (new Date()).getMonth() + 1;
     this.form.desire_month = curretMonth
-    this.desire_month_options = Array.from(Array(2).keys()).map((x) => ({ value: x + curretMonth, text: `${(x + curretMonth - 1) % 12 + 1}月`}))
+    this.desire_month_options = Array.from(Array(2).keys()).map((x) => ({ value: (x + curretMonth - 1) % 12 + 1, text: `${(x + curretMonth - 1) % 12 + 1}月`}))
     this.desire_auth_month_options = Array.from(Array(12).keys()).map((x) => ({ value: x + 1, text: `${x + 1}月`}))
     this.desire_start_h_options = Array.from(Array(7).keys()).map((x) => ({ value: x + 10, text: `${x + 10}時`}))
     this.desire_start_m_options = Array.from(Array(4).keys()).map((x) => ({ value: x * 15, text: `${x * 15}分`}))
